@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { reactive, onMounted } from 'vue'
 import * as jsonld from 'jsonld';
 // const entryPointUrl = ref("")
 const entryPoint = reactive({

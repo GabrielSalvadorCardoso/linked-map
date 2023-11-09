@@ -1,27 +1,21 @@
 <script>
 import "leaflet/dist/leaflet.css";
-import { LMap, LTileLayer, LGeoJson } from "@vue-leaflet/vue-leaflet";
+import { LMap, LTileLayer, LGeoJson, LPopup } from "@vue-leaflet/vue-leaflet";
+import FeatureRender from './FeatureRender.vue';
 
 export default {
+    // declaração de componentes que serão usados no componente TemplateMap
     components: {
         LMap,
         LTileLayer,
-        LGeoJson
+        FeatureRender
+        // LGeoJson,
+        // LPopup
     },
     data() {
         return {
-            zoom: 2,
-            geojson: undefined
-            // {
-            //     "type": "Feature",
-            //     "geometry": {
-            //         "type": "Point",
-            //         "coordinates": [125.6, 10.1]
-            //     },
-            //     "properties": {
-            //         "name": "Dinagat Islands"
-            //     }
-            // }
+            zoom: 4,
+            geojson: []
         };
     },
     methods: {
@@ -38,12 +32,18 @@ export default {
 </script>
 <template>
     <div class="mapContainer">
-        <LMap ref="map" v-model:zoom="zoom" :center="[47.41322, -1.219482]">
+        <LMap ref="map" v-model:zoom="zoom" :center="[-15.83, -47.86]">
             <LTileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         layer-type="base"
                         name="OpenStreetMap">
             </LTileLayer>
-            <LGeoJson :geojson="geojson" ></LGeoJson>
+            
+            
+            <FeatureRender  v-for="(feature, index) in geojson['features']"
+                            :key="feature.id"
+                            :geojson="geojson['features'][index]" />
+            
+            
         </LMap>
     </div>
     <button v-on:click="requestData()">Request Data</button>
