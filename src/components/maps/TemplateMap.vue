@@ -21,8 +21,8 @@ export default {
     methods: {
         async requestData() {
             event.preventDefault()
-            const response = await fetch("http://bcim.geoapi/lim-unidade-federacao-a-list")
-            // const response = await fetch("http://bcim.geoapi/lim-municipio-a-list")
+            // const response = await fetch("http://bcim.geoapi/lim-unidade-federacao-a-list")
+            const response = await fetch("http://bcim.geoapi/lim-municipio-a-list")
             const json = await response.json()
             this.geojson = json
         }
@@ -32,7 +32,7 @@ export default {
 </script>
 <template>
     <div class="mapContainer">
-        <LMap ref="map" v-model:zoom="zoom" :center="[-15.83, -47.86]">
+        <LMap ref="map" :use-global-leaflet="false" v-model:zoom="zoom" :center="[-15.83, -47.86]">
             <LTileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         layer-type="base"
                         name="OpenStreetMap">

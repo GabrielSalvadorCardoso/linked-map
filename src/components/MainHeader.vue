@@ -1,17 +1,22 @@
 <script setup>
-    const appName = "Linked Map";
+import { useGlobalStore } from "@/stores/GlobalStore"
+// import { storeToRefs } from "pinia"
+// const { activeTab } = storeToRefs(useGlobalStore())
+const globalStore = useGlobalStore()
 </script>
 
 <template>
-    <div>
-        <h1 class="title">{{ appName }}</h1>
+    <div class="container">
+        <v-toolbar :title="`Linked Map | ${globalStore.activeTab}`"></v-toolbar>
     </div>
 </template>
 
 <style scoped>
-.title {
-    margin: 0 auto;
+.container {
+    /* height: 56px; */
     text-align: center;
-    color: red;
+}
+.container v-toolbar-title {
+    margin: auto;
 }
 </style>
