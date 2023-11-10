@@ -33,7 +33,7 @@ export default {
              */
             contextTableItems: [],
             coincidentSemantics: {
-                "schema:identifier": 2
+                // "schema:identifier": 2
             }
         }
     }, 
@@ -61,8 +61,6 @@ export default {
             // entryPoint.metadata = metadata
             // entryPoint.contextualizedData = {...data, ...metadata}
             // entryPoint.proccessedJSONLD = proccessedJSONLD
-            
-            
         },
         async fetchMetadata(url) {
             const resp = await fetch(url, {
@@ -93,6 +91,9 @@ export default {
         urlExists(url) {
             return this.requestedUrls.includes(url) || Object.keys(this.contexts).includes(url)
         },
+
+        // merge table methods
+        // TODO
         disableCoincidentItems(orderedTableItems){
             let tableItems = [
                 {
@@ -128,9 +129,6 @@ export default {
                     backgroundColor: "rgb(255, 0, 0)"
                 }
                 
-                
-                
-                
             ]
             return tableItems
             // this.contextTableItems = tableItems
@@ -138,45 +136,100 @@ export default {
         orderTableItemsBySemantic(tableItems) {
             return tableItems.sort((a, b) => (a.semantic > b.semantic) ? 1 : -1)
         },
+        removeJSONLDTermDefinitions() {
+            const JSONLD_ATYPE_KEYWORD = "@type";
+            const JSONLD_AID_KEYWORD = "@id"
+            const JSONLD_SEMANTIC_DEFINITIONS = [JSONLD_AID_KEYWORD, JSONLD_ATYPE_KEYWORD]
+            this.contextTableItems = this.contextTableItems.filter((_item) => !JSONLD_SEMANTIC_DEFINITIONS.includes(_item.semantic) )
+            this.removeHyperResourceVocabPrefixDefinition()
+        },
+        removeHyperResourceVocabPrefixDefinition(){
+            const HYPER_RESOURCE_VOCAB_KEYWORD = "hr"
+            this.contextTableItems = this.contextTableItems.filter((_item) => HYPER_RESOURCE_VOCAB_KEYWORD !== _item.term )
+        },
+        removeVocabPrefixDefinitions() {
+            let allTerms = this.contextTableItems.map((_item) => _item.term)
+            let allSemantics = this.contextTableItems.map((_item) => _item.semantic)
+            let termsToExclude = []
+            for(let termsKey = 0; termsKey<allTerms.length; termsKey++) {
+                let curTerm = allTerms[termsKey];
+                for(let semanticsKey = 0; semanticsKey<allSemantics.length; semanticsKey++) {
+                    if(allSemantics[semanticsKey].startsWith(`${curTerm}:`) && !termsToExclude.includes(curTerm)) {
+                        termsToExclude.push(curTerm)
+                        break
+                    }
+                }
+            }
+
+            this.contextTableItems = this.contextTableItems.filter((_item) => !termsToExclude.includes(_item.term))
+        },
         generateContextTableItems() {
-            let tableItems = [
-                {
-                    term: "codigo_municipio",
-                    semantic: "schema:identifier",
-                    type: "schema:StructuredValue",
-                    source: "http://localhost:8001/taxas-rendimento-escolar-por-municipio-list",
-                    color: "white",
-                    backgroundColor: "rgb(255, 0, 0)"
-                },
-                {
-                    term: "taxa_aprovacao",
-                    semantic: "inep:xml.php?jsonldTema=738",
-                    type: "schema:Float",
-                    source: "http://localhost:8001/taxas-rendimento-escolar-por-municipio-list",
-                    color: "white",
-                    backgroundColor: "rgb(255, 0, 0)"
-                },
-                {
-                    term: "geocodigo",
-                    semantic: "schema:identifier",
-                    type: "schema:StructuredValue",
-                    source: "http://bcim.geoapi/lim-municipio-a-list",
-                    color: "black",
-                    backgroundColor: "rgb(125, 125, 125)"
-                },
-                {
-                    term: "coordinates",
-                    semantic: "geojson:coordinates",
-                    type: "-",
-                    source: "http://bcim.geoapi/lim-municipio-a-list",
-                    color: "black",
-                    backgroundColor: "rgb(125, 125, 125)"
+            let tableItems = []
+            const JSONLD_ACONTEXT_KEYWORD = "@context";
+            const JSONLD_AID_KEYWORD = "@id"
+            const JSONLD_ATYPE_KEYWORD = "@type";
+            for(let i=0; i<Object.keys(this.contexts).length; i++) {
+                let source = Object.keys(this.contexts)[i]
+                for(let k=0; k<Object.entries(this.contexts[source][JSONLD_ACONTEXT_KEYWORD]).length; k++) {
+                    let item = {}
+                    item.source = source
+                    let term = Object.entries(this.contexts[source][JSONLD_ACONTEXT_KEYWORD])[k][0]
+                    let termVal = Object.entries(this.contexts[source][JSONLD_ACONTEXT_KEYWORD])[k][1]
+
+                    item.term = term
+
+                    let semantic = null
+                    if(typeof termVal === 'string') {
+                        item.semantic = termVal
+                    } else if(typeof termVal === 'object' && Object.keys(termVal).includes(JSONLD_AID_KEYWORD)) {
+                        item.semantic = termVal[JSONLD_AID_KEYWORD]
+                    }
+                    if(typeof termVal === 'object' && Object.keys(termVal).includes(JSONLD_ATYPE_KEYWORD)) {
+                        item.type = termVal[JSONLD_ATYPE_KEYWORD]
+                    }                    
+
+                    tableItems.push(item)
                 }
                 
-            ]
-            // tableItems = tableItems.sort(function(a, b) {  return a.semantic - b.semantic;})
+            }
+
+            // tableItems = [
+            //     {
+            //         term: "codigo_municipio",
+            //         semantic: "schema:identifier",
+            //         type: "schema:StructuredValue",
+            //         source: "http://localhost:8001/taxas-rendimento-escolar-por-municipio-list",
+            //         color: "white",
+            //         backgroundColor: "rgb(255, 0, 0)"
+            //     },
+            //     {
+            //         term: "taxa_aprovacao",
+            //         semantic: "inep:xml.php?jsonldTema=738",
+            //         type: "schema:Float",
+            //         source: "http://localhost:8001/taxas-rendimento-escolar-por-municipio-list",
+            //         color: "white",
+            //         backgroundColor: "rgb(255, 0, 0)"
+            //     },
+            //     {
+            //         term: "geocodigo",
+            //         semantic: "schema:identifier",
+            //         type: "schema:StructuredValue",
+            //         source: "http://bcim.geoapi/lim-municipio-a-list",
+            //         color: "black",
+            //         backgroundColor: "rgb(125, 125, 125)"
+            //     },
+            //     {
+            //         term: "coordinates",
+            //         semantic: "geojson:coordinates",
+            //         type: "-",
+            //         source: "http://bcim.geoapi/lim-municipio-a-list",
+            //         color: "black",
+            //         backgroundColor: "rgb(125, 125, 125)"
+            //     }
+                
+            // ]
             tableItems = this.orderTableItemsBySemantic(tableItems)
-            tableItems = this.disableCoincidentItems(tableItems)
+            // tableItems = this.disableCoincidentItems(tableItems)
             return tableItems
         },
         async fetchOptionsToURL(url) {
@@ -192,9 +245,13 @@ export default {
             console.log(Object.keys(this.contexts))
             if(Object.keys(this.contexts).length > 1) {
                 this.contextTableItems = this.generateContextTableItems()
+                this.removeJSONLDTermDefinitions()
+                this.removeVocabPrefixDefinitions()
             }
             
         },
+
+        // context view dialog open/close
         openContextViewDialog(url) {
             this.contextViewDialogOpen = true
             this.contextOpened = url
@@ -203,6 +260,8 @@ export default {
             this.contextViewDialogOpen = false
             this.contextOpened = undefined
         },
+
+        // define colors
         randomRgb() {
             var r = Math.floor(Math.random() * 256);
             var g = Math.floor(Math.random() * 256);
@@ -291,8 +350,7 @@ export default {
         <v-table density="compact">
             <thead>
                 <tr>
-                    <th class="text-left">Semantic (@id)</th>
-                    
+                    <th class="text-left">Semantic (@id)</th>                    
                     <th class="text-left">Term</th>
                     <th class="text-left">Source</th>
                     <th class="text-left">Type (@type)</th>
@@ -300,19 +358,9 @@ export default {
             </thead>
             <tbody>
                 <tr v-for="item in contextTableItems" :key="item.name">
-                    
-                    <!-- <td :style="`background-color: ${item.backgroundColor}; color: ${item.color}`">{{ item.term }}</td>
-                    <td :style="`background-color: ${item.backgroundColor}; color: ${item.color}`">{{ item.semantic }}</td>
-                    <td :style="`background-color: ${item.backgroundColor}; color: ${item.color}`">{{ item.type }}</td> -->
                     <td v-if="item.semantic !== null && !Object.keys(coincidentSemantics).includes(item.semantic)">{{ item.semantic }}</td>
                     <td v-if="Object.keys(coincidentSemantics).includes(item.semantic)" :rowspan="coincidentSemantics[item.semantic]">{{ item.semantic }}</td>
-
                     <td>{{ item.term }}</td>
-                    <!-- <td v-if="item.term === 'geocodigo'" rowspan="2">{{ item.term }}</td>
-                    <td v-if="item.term !== 'codigo_municipio' || item.term !== 'geocodigo'">{{ item.term }}</td> -->
-                    
-                    
-
                     <td>{{ item.source }}</td>
                     <td>{{ item.type }}</td>
                 </tr>
