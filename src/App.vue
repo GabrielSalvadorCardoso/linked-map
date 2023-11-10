@@ -1,24 +1,29 @@
 <script setup>
-    import MainHeader from './components/MainHeader.vue';
-    import InputEntryPoint from './components/InputEntryPoint.vue';
-    import NavigationDrawer from './components/navigation/NavigationDrawer.vue';
-    import TemplateMap from './components/maps/TemplateMap.vue'
+import MainHeader from './components/MainHeader.vue';
+import LinkSources from './components/LinkSources.vue';
+import NavigationDrawer from './components/navigation/NavigationDrawer.vue';
+import TemplateMap from './components/maps/TemplateMap.vue'
+import { useGlobalStore } from "@/stores/GlobalStore"
+const globalStore = useGlobalStore()
 </script>
 
 <template>
     <MainHeader />
+
+    <main v-if="globalStore.activeTab==='Home'">
+        <TemplateMap />
+    </main>
+
+    <main v-if="globalStore.activeTab==='Link Sources'">
+        <LinkSources />
+    </main>
     <NavigationDrawer /> 
     
-    <InputEntryPoint />
-
-    <TemplateMap />
-    <!-- <GeoJsonDemo /> -->
-
-    <main></main>
+    
 </template>
 
 <style scoped>
-header {
-    line-height: 1.5;
+main {
+    width: 100%;
 }
 </style>

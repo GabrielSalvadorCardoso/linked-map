@@ -1,6 +1,6 @@
 <script>
 import "leaflet/dist/leaflet.css";
-import { LMap, LTileLayer, LGeoJson, LPopup } from "@vue-leaflet/vue-leaflet";
+import { LMap, LTileLayer } from "@vue-leaflet/vue-leaflet";
 import FeatureRender from './FeatureRender.vue';
 
 export default {
@@ -21,8 +21,8 @@ export default {
     methods: {
         async requestData() {
             event.preventDefault()
-            // const response = await fetch("http://bcim.geoapi/lim-unidade-federacao-a-list")
-            const response = await fetch("http://bcim.geoapi/lim-municipio-a-list")
+            const response = await fetch("http://bcim.geoapi/lim-unidade-federacao-a-list")
+            // const response = await fetch("http://bcim.geoapi/lim-municipio-a-list")
             const json = await response.json()
             this.geojson = json
         }
@@ -52,5 +52,6 @@ export default {
 .mapContainer {
     height:600px;
     width: 100%;
+    margin: 10px 255px;
 }
 </style>

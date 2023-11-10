@@ -35,11 +35,11 @@ export default {
   
                 <v-list density="compact" nav>
                     <v-list-item prepend-icon="mdi-home-city" title="Home" value="home" @click="globalStore.setActiveTab('Home')"></v-list-item>
-                    <v-list-item prepend-icon="mdi-account" title="My Account" value="account" @click="globalStore.setActiveTab('My Account')"></v-list-item>
-                    <v-list-item prepend-icon="mdi-account-group-outline" title="Users" value="users" @click="globalStore.setActiveTab('Users')"></v-list-item>
+                    <v-list-item prepend-icon="mdi-account" title="Link Sources" value="account" @click="globalStore.setActiveTab('Link Sources')"></v-list-item>
+                    <!-- <v-list-item prepend-icon="mdi-account-group-outline" title="Users" value="users" @click="globalStore.setActiveTab('Users')"></v-list-item> -->
                 </v-list>
             </v-navigation-drawer>
-            <v-main style="height: 250px"></v-main>
+            <!-- <v-main style="height: 250px"></v-main> -->
         </v-layout>
     </v-card>
 </template>
