@@ -32,7 +32,7 @@ export default {
 </script>
 <template>
     <div class="mapContainer">
-        <LMap ref="map" :use-global-leaflet="false" v-model:zoom="zoom" :center="[-15.83, -47.86]">
+        <LMap ref="map" :use-global-leaflet="false" v-model:zoom="zoom" :center="[-15.83, -55.86]">
             <LTileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         layer-type="base"
                         name="OpenStreetMap">
@@ -50,8 +50,8 @@ export default {
 </template>
 <style>
 .mapContainer {
-    height:600px;
-    width: 100%;
+    height: 100vh;
+    /* width: 100%; */
     margin: 10px 255px;
 }
 </style>

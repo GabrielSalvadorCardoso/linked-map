@@ -1,13 +1,14 @@
 <script>
 // import { reactive, } from 'vue'
 import * as jsonld from 'jsonld';
+import LinkSourcesConfirmationTable from './tables/LinkSourcesConfirmationTable.vue'
 // import SvgIcon from '@jamescoyle/vue-icon';
 // import { mdiCheckOutline } from '@mdi/js';
 
 export default {
     name: "LinkSources",
     components: {
-        
+        LinkSourcesConfirmationTable
     },
     data() {
         return {
@@ -24,6 +25,8 @@ export default {
             contexts: {},
             contextViewDialogOpen: false,
             contextOpened: undefined,
+
+            isLinkSourceDialogOpen: false,
             /*
             termos com a mesma semântica (mesmo @id) e, opcionalmente com o mesmo tipo (@type),
             são passíveis de servirem como atributos de ligação entre fontes diferentes.
@@ -38,6 +41,7 @@ export default {
         }
     }, 
     methods: {
+        // Requests
         async requestEntryPoint() {
             event.preventDefault()
             this.fetchMetadata(entryPoint.url)
@@ -56,11 +60,6 @@ export default {
                 })
                 
             })
-            
-            // entryPoint.data = data
-            // entryPoint.metadata = metadata
-            // entryPoint.contextualizedData = {...data, ...metadata}
-            // entryPoint.proccessedJSONLD = proccessedJSONLD
         },
         async fetchMetadata(url) {
             const resp = await fetch(url, {
@@ -84,6 +83,8 @@ export default {
                 }
             })
         },
+
+        // URLs manipulation
         addCurrentURL() {
             if(!!this.entryPoint.url && !this.urlExists(this.entryPoint.url.trim()))
                 this.urls.push(this.entryPoint.url.trim())
@@ -93,45 +94,62 @@ export default {
         },
 
         // merge table methods
-        // TODO
-        disableCoincidentItems(orderedTableItems){
-            let tableItems = [
-                {
-                    term: "coordinates",
-                    semantic: "geojson:coordinates",
-                    type: "-",
-                    source: "http://bcim.geoapi/lim-municipio-a-list",
-                    color: "black",
-                    backgroundColor: "rgb(125, 125, 125)"
-                },
-                {
-                    term: "taxa_aprovacao",
-                    semantic: "inep:xml.php?jsonldTema=738",
-                    type: "schema:Float",
-                    source: "http://localhost:8001/taxas-rendimento-escolar-por-municipio-list",
-                    color: "white",
-                    backgroundColor: "rgb(255, 0, 0)"
-                },
-                {
-                    term: "geocodigo",
-                    semantic: "schema:identifier",
-                    type: "schema:StructuredValue",
-                    source: "http://bcim.geoapi/lim-municipio-a-list",
-                    color: "black",
-                    backgroundColor: "rgb(125, 125, 125)"
-                },
-                {
-                    term: "codigo_municipio",
-                    semantic: null,
-                    type: "schema:StructuredValue",
-                    source: "http://localhost:8001/taxas-rendimento-escolar-por-municipio-list",
-                    color: "white",
-                    backgroundColor: "rgb(255, 0, 0)"
+        createCoincidentSemanticsMapper() {
+            let coincidentSemantics = {}
+            for(let i=0; i<this.contextTableItems.length; i++) {
+
+                if(Object.keys(coincidentSemantics).includes(this.contextTableItems[i].semantic)) {
+                    coincidentSemantics[this.contextTableItems[i].semantic] = coincidentSemantics[this.contextTableItems[i].semantic]+1
+                } else {
+                    coincidentSemantics[this.contextTableItems[i].semantic] = 1
                 }
-                
-            ]
-            return tableItems
-            // this.contextTableItems = tableItems
+            }
+
+            let _coincidentSemantics = {}
+            for(let k=0; k<Object.entries(coincidentSemantics).length; k++) {
+                let semantic = Object.entries(coincidentSemantics)[k][0]
+                let count = Object.entries(coincidentSemantics)[k][1]
+                if(count>1) {
+                    _coincidentSemantics[semantic] = count
+                }
+            }
+            
+            this.coincidentSemantics = _coincidentSemantics
+        },
+        // TODO
+        getConincidentItemsIndexes(semanticToFind) {
+            const indexes = [];
+            this.contextTableItems.forEach((element, index) => {
+                if (element.semantic === semanticToFind) {
+                    indexes.push(index);
+                }
+            });
+
+            return indexes
+        },
+        disableCoincidentItems(){
+            this.createCoincidentSemanticsMapper()
+            
+            let indexesToDisableSemantic = []
+
+            for(let i=0; i<this.contextTableItems.length; i++) {
+                let currentSemantic = this.contextTableItems[i].semantic
+                if(!Object.keys(this.coincidentSemantics).includes(currentSemantic)) {
+                    indexesToDisableSemantic = []
+                    continue
+
+                } else {
+                    indexesToDisableSemantic = this.getConincidentItemsIndexes(currentSemantic)
+                    indexesToDisableSemantic.shift();
+                    if(indexesToDisableSemantic.includes(i)) {
+
+                        this.contextTableItems[i].semantic = null
+                    }
+                }
+            }
+            
+            
+            console.log(this.contextTableItems)
         },
         orderTableItemsBySemantic(tableItems) {
             return tableItems.sort((a, b) => (a.semantic > b.semantic) ? 1 : -1)
@@ -192,44 +210,8 @@ export default {
                 }
                 
             }
-
-            // tableItems = [
-            //     {
-            //         term: "codigo_municipio",
-            //         semantic: "schema:identifier",
-            //         type: "schema:StructuredValue",
-            //         source: "http://localhost:8001/taxas-rendimento-escolar-por-municipio-list",
-            //         color: "white",
-            //         backgroundColor: "rgb(255, 0, 0)"
-            //     },
-            //     {
-            //         term: "taxa_aprovacao",
-            //         semantic: "inep:xml.php?jsonldTema=738",
-            //         type: "schema:Float",
-            //         source: "http://localhost:8001/taxas-rendimento-escolar-por-municipio-list",
-            //         color: "white",
-            //         backgroundColor: "rgb(255, 0, 0)"
-            //     },
-            //     {
-            //         term: "geocodigo",
-            //         semantic: "schema:identifier",
-            //         type: "schema:StructuredValue",
-            //         source: "http://bcim.geoapi/lim-municipio-a-list",
-            //         color: "black",
-            //         backgroundColor: "rgb(125, 125, 125)"
-            //     },
-            //     {
-            //         term: "coordinates",
-            //         semantic: "geojson:coordinates",
-            //         type: "-",
-            //         source: "http://bcim.geoapi/lim-municipio-a-list",
-            //         color: "black",
-            //         backgroundColor: "rgb(125, 125, 125)"
-            //     }
-                
-            // ]
             tableItems = this.orderTableItemsBySemantic(tableItems)
-            // tableItems = this.disableCoincidentItems(tableItems)
+            // this.disableCoincidentItems()
             return tableItems
         },
         async fetchOptionsToURL(url) {
@@ -247,6 +229,7 @@ export default {
                 this.contextTableItems = this.generateContextTableItems()
                 this.removeJSONLDTermDefinitions()
                 this.removeVocabPrefixDefinitions()
+                this.disableCoincidentItems()
             }
             
         },
@@ -259,6 +242,13 @@ export default {
         closeContextViewDialog() {
             this.contextViewDialogOpen = false
             this.contextOpened = undefined
+        },
+
+        openLinkSourceDialog() {
+            this.isLinkSourceDialogOpen = true
+        },
+        closeLinkSourceDialog() {
+            this.isLinkSourceDialogOpen = false
         },
 
         // define colors
@@ -347,9 +337,10 @@ export default {
         <!-- <pre>{{ entryPoint.proccessedJSONLD }}</pre> -->
         <!-- <pre>{{contexts}}</pre> -->
 
-        <v-table density="compact">
+        <v-table class="link-sources-table" density="compact">
             <thead>
                 <tr>
+                    <th class="text-left"> </th>                    
                     <th class="text-left">Semantic (@id)</th>                    
                     <th class="text-left">Term</th>
                     <th class="text-left">Source</th>
@@ -358,20 +349,55 @@ export default {
             </thead>
             <tbody>
                 <tr v-for="item in contextTableItems" :key="item.name">
+                    <!-- v-if="Object.keys(coincidentSemantics).includes(item.semantic)" :rowspan="coincidentSemantics[item.semantic]" -->
+                    <!-- <td class="checkbox-td">
+                        <v-checkbox class="checkbox-data"></v-checkbox>
+                    </td> -->
+                    <td v-if="item.semantic !== null && !Object.keys(coincidentSemantics).includes(item.semantic)">
+                        <input type="checkbox" />
+                    </td>
+                    <td v-if="Object.keys(coincidentSemantics).includes(item.semantic)" :rowspan="coincidentSemantics[item.semantic]">
+                        <input type="checkbox" />
+                    </td>
                     <td v-if="item.semantic !== null && !Object.keys(coincidentSemantics).includes(item.semantic)">{{ item.semantic }}</td>
                     <td v-if="Object.keys(coincidentSemantics).includes(item.semantic)" :rowspan="coincidentSemantics[item.semantic]">{{ item.semantic }}</td>
+
                     <td>{{ item.term }}</td>
                     <td>{{ item.source }}</td>
                     <td>{{ item.type }}</td>
                 </tr>
             </tbody>
+            <!-- <pre>{{contextTableItems}}</pre> -->
+            <LinkSourcesConfirmationTable   :isLinkSourceDialogOpen="isLinkSourceDialogOpen"
+                                            v-on:closeLinkSourceDialog="closeLinkSourceDialog"
+                                            :contextTableItems="contextTableItems" />
         </v-table>
+        <v-btn class="link-sources-btn" :active="Object.keys(contexts).length > 1" v-on:click="$event => openLinkSourceDialog()" variant="outlined">Link Sources</v-btn>
     </div>
 </template>
 
 <style scoped>
 .container {
     margin: 10px 255px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* background-color: rgb(255, 46, 36); */
+}
+.checkbox-td {
+    padding: 0;
+    display: flex;
+    /* flex-direction: column; */
+    justify-content: center;
+    /* border: rgb(255, 46, 36) solid 1px; */
+}
+.checkbox-data {
+    margin: 0;
+    padding: 0;
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* justify-content: center; */
+    /* border: rgb(0, 46, 36) solid 2px; */
 }
 .url-input {
     margin: 10px;
@@ -384,6 +410,9 @@ export default {
     /* border-radius: 5px; */
     display: flex;;
     flex-direction: column;
+}
+.link-sources-btn {
+    margin: auto;
 }
 .url-field {
     display: flex;
