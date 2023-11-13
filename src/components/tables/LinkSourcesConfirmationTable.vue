@@ -7,7 +7,7 @@ export default {
     },
     setup(props) {
         // setup() receives props as the first argument.
-        console.log(props)
+        // console.log(props)
     },
     components: {
         
