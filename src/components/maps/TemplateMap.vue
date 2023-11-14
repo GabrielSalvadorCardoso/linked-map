@@ -19,13 +19,13 @@ export default {
         };
     },
     methods: {
-        async requestData() {
-            event.preventDefault()
-            const response = await fetch("http://bcim.geoapi/lim-unidade-federacao-a-list")
-            // const response = await fetch("http://bcim.geoapi/lim-municipio-a-list")
-            const json = await response.json()
-            this.geojson = json
-        }
+        // async requestData() {
+        //     event.preventDefault()
+        //     const response = await fetch("http://bcim.geoapi/lim-unidade-federacao-a-list")
+        //     // const response = await fetch("http://bcim.geoapi/lim-municipio-a-list")
+        //     const json = await response.json()
+        //     this.geojson = json
+        // }
     }
 };
 
@@ -38,7 +38,6 @@ export default {
                         name="OpenStreetMap">
             </LTileLayer>
             
-            
             <FeatureRender  v-for="(feature, index) in geojson['features']"
                             :key="feature.id"
                             :geojson="geojson['features'][index]" />
@@ -46,7 +45,7 @@ export default {
             
         </LMap>
     </div>
-    <button v-on:click="requestData()">Request Data</button>
+    <!-- <button v-on:click="requestData()">Request Data</button> -->
 </template>
 <style>
 .mapContainer {

@@ -6,6 +6,13 @@ import * as jsonld from 'jsonld';
 import LinkSourcesConfirmationTable from './tables/LinkSourcesConfirmationTable.vue'
 // @ts-ignore
 import DataDescription from '../models/DataDescription'
+// @ts-ignore
+import { useGlobalStore } from "@/stores/GlobalStore";
+// @ts-ignore
+import { LinkinMap } from "@/stores/GlobalStore";
+// @ts-ignore
+import { LinkinItem } from "@/stores/GlobalStore";
+
 // import SvgIcon from '@jamescoyle/vue-icon';
 // import { mdiCheckOutline } from '@mdi/js';
 
@@ -22,7 +29,9 @@ type LinkSourcesProps = {
     contextOpened: any,
     isLinkSourceDialogOpen: boolean,
     contextTableItems: TableItem[],
-    coincidentSemantics: any
+    selectedTableItems: TableItem[],
+    coincidentSemantics: any,
+    globalStore: any
 }
 
 type TableItem = {
@@ -65,7 +74,9 @@ export default {
             contextTableItems: [],
             coincidentSemantics: {
                 // "schema:identifier": 2
-            }
+            },
+            selectedTableItems: [],
+            globalStore: useGlobalStore()
         }
     }, 
     methods: {
@@ -170,9 +181,6 @@ export default {
                     indexesToDisableSemantic = this.getConincidentItemsIndexes(currentSemantic)
                     indexesToDisableSemantic = indexesToDisableSemantic.filter((_idx:number) => _idx !== i);
                     this.contextTableItems[i].matchsWith = indexesToDisableSemantic
-                    // if(indexesToDisableSemantic.includes(i)) {
-                    //     this.contextTableItems[i].semantic = null
-                    // }
                 }
             }
         },
@@ -254,7 +262,6 @@ export default {
                 this.contexts[url] = new DataDescription(url, data[JSONLD_ACONTEXT_KEYWORD], data[JSONLD_ATYPE_KEYWORD])//data
             }
 
-            console.log(Object.keys(this.contexts))
             if(Object.keys(this.contexts).length > 1) {
                 this.contextTableItems = this.generateContextTableItems()
                 this.removeJSONLDTermDefinitions()
@@ -281,32 +288,6 @@ export default {
             this.isLinkSourceDialogOpen = false
         },
 
-        // define colors
-        // randomRgb():number[] {
-        //     var r = Math.floor(Math.random() * 256);
-        //     var g = Math.floor(Math.random() * 256);
-        //     var b = Math.floor(Math.random() * 256);
-        //     return [r, g, b];
-        // },
-        // colourFromRgb(r:number, g:number, b:number) {
-        //     return 'rgb(' + r + ',' + g + ',' + b + ')';
-        // },
-        // colourIsLight(r:number, g:number, b:number) {
-        //     // Fonte: https://codepen.io/WebSeed/pen/pvgqEq
-        //     var a = 1 - (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-        //     console.log(a);
-        //     return (a < 0.5);
-        // },
-        // getTextColor(){
-        //     var bgRgb = this.randomRgb();
-        //     var textColour = this.colourIsLight(bgRgb[0], bgRgb[1], bgRgb[2]) ? 'black' : 'white'
-        //     return textColour
-        // },
-        // getBackgroundColor() {
-        //     var bgColour = this.colourFromRgb(bgRgb[0], bgRgb[1], bgRgb[2]);
-        //     return bgColour
-        // },
-
         // interface control
         isUniqueSemanticItem(item:TableItem):boolean {
             // return item.semantic !== null && !Object.keys(this.coincidentSemantics).includes(item.semantic)
@@ -324,29 +305,46 @@ export default {
             return diffSourceItem === undefined
 
         },
-        // isDuplicatedSemanticItem(item:TableItem):boolean {            
-        //     return !this.isUniqueSemanticItem(item)
-        //     // return Object.keys(this.coincidentSemantics).includes(item.semantic)
-        // },
         isFirstInDuplicationSemanticSet(item:TableItem, itemIndex:number):boolean {
-            if(["geocodigo", "codigo_municipio"].includes(item.term)) {
-                console.log(item)
-            }
             if(this.isUniqueSemanticItem(item)) {
                 return false
             } else {
                 return itemIndex < Math.min(...item.matchsWith)
             }
         },
-        // mustShowItem(item:TableItem, itemIndex:number) {
-        //     if(this.isFirstInDuplicationSemanticSet(item, itemIndex)) {
-        //         return true
-        //     } else if(this.isUniqueSemanticItem(item)) {
-        //         return true
-        //     } else {
-        //         return false
-        //     }
-        // }
+        setLinkSourcesSelection(event:any, item:TableItem) {
+            if(event.target.checked) {
+                this.selectedTableItems.push(item)
+            } else {
+                this.selectedTableItems = this.selectedTableItems.filter((_item:TableItem) => {
+                    return (
+                        _item.semantic !== item.semantic || _item.source !== item.source ||
+                        _item.term !== item.term || _item.type !== item.type
+                    )
+                })
+            }
+        },
+        confirmLinkedSources() {
+            let sourcesLinks:LinkinMap = {}
+            
+            for(let i=0; i<this.selectedTableItems.length; i++) {
+                let item = this.selectedTableItems[i]
+                let matchItems = this.contextTableItems.filter((_item:TableItem, index: number) => item.matchsWith.includes(index))
+                matchItems.push(item)
+                let nameOfTheSet = matchItems.map(_item => _item.source).join(" + ")
+                let _matchItems:LinkinItem[] = matchItems.map(_item => {
+                    return {
+                        semantic: _item.semantic,
+                        term: _item.term,
+                        type: _item.type,
+                        source: _item.source
+                    }
+                    
+                })
+                sourcesLinks[nameOfTheSet] = _matchItems;
+            }
+            this.globalStore.addSourcesLink(sourcesLinks)
+        }
     }
 }
 </script>
@@ -406,7 +404,7 @@ export default {
         <!-- <pre>{{ entryPoint.proccessedJSONLD }}</pre> -->
         <!-- <pre>{{contexts}}</pre> -->
 
-        <v-table class="link-sources-table" density="compact">
+        <v-table v-if="Object.keys(contexts).length > 1" class="link-sources-table" density="compact">
             <thead>
                 <tr>
                     <th class="text-left"> </th>                    
@@ -422,7 +420,7 @@ export default {
                         <input type="checkbox" disabled/>
                     </td>
                     <td v-if="isFirstInDuplicationSemanticSet(item, index)" :rowspan="item.matchsWith.length+1">
-                        <input type="checkbox" />
+                        <input type="checkbox" v-on:click="($event:any) => setLinkSourcesSelection($event, item)" />
                     </td>
 
                     <td v-if="isUniqueSemanticItem(item)">{{ item.semantic }}</td>
@@ -433,12 +431,14 @@ export default {
                     <td>{{ item.type }}</td>
                 </tr>
             </tbody>
-            <!-- <pre>{{contextTableItems}}</pre> -->
             <LinkSourcesConfirmationTable   :isLinkSourceDialogOpen="isLinkSourceDialogOpen"
                                             v-on:closeLinkSourceDialog="closeLinkSourceDialog"
-                                            :contextTableItems="contextTableItems" />
+                                            v-on:confirmLinkedSources="confirmLinkedSources"
+                                            :selectedTableItems="selectedTableItems" />
         </v-table>
-        <v-btn class="link-sources-btn" :active="Object.keys(contexts).length > 1" v-on:click="($event:any) => openLinkSourceDialog()" variant="outlined">Link Sources</v-btn>
+        <v-btn class="link-sources-btn" v-if="Object.keys(contexts).length > 1" v-on:click="($event:any) => openLinkSourceDialog()" variant="outlined">
+            Link Sources
+        </v-btn>
     </div>
 </template>
 
@@ -448,22 +448,15 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* background-color: rgb(255, 46, 36); */
 }
 .checkbox-td {
     padding: 0;
     display: flex;
-    /* flex-direction: column; */
     justify-content: center;
-    /* border: rgb(255, 46, 36) solid 1px; */
 }
 .checkbox-data {
     margin: 0;
     padding: 0;
-    /* display: flex; */
-    /* flex-direction: column; */
-    /* justify-content: center; */
-    /* border: rgb(0, 46, 36) solid 2px; */
 }
 .url-input {
     margin: 10px;
@@ -472,8 +465,6 @@ export default {
     margin: 10px auto;
 }
 .form {
-    /* border: solid black 2px; */
-    /* border-radius: 5px; */
     display: flex;;
     flex-direction: column;
 }
@@ -496,7 +487,6 @@ export default {
     border: #ccc solid 2px;
 }
 .item-title {
-    /* background-color: aqua; */
     vertical-align: middle;
     margin: auto 0 auto 10px;
 }

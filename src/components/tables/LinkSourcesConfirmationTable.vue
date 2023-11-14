@@ -3,7 +3,7 @@ export default {
     name: "LinkSourcesConfirmationTable",
     props: {
         isLinkSourceDialogOpen: Boolean,
-        contextTableItems: Object
+        selectedTableItems: Object
     },
     setup(props) {
         // setup() receives props as the first argument.
@@ -24,6 +24,10 @@ export default {
         },
         closeLinkSourceDialog() {
             this.$emit('closeLinkSourceDialog')
+        },
+        confirmLinkedSources() {
+            this.$emit('confirmLinkedSources')
+            this.$emit('closeLinkSourceDialog')
         }
     },
     watch: {
@@ -38,18 +42,17 @@ export default {
 }
 </script>
 <template>
-    
-    <!-- <pre>{{ isLinkSourceDialogOpen }}</pre>
-    <pre>{{ contextTableItems }}</pre> -->
     <v-col cols="auto">
         
         <v-dialog transition="dialog-bottom-transition" v-model="isDialogOpen" width="auto">
             <v-card>
                 <v-toolbar color="primary" :title="`Link sources confirmation`"></v-toolbar>
                 <v-card-text>
-                    <pre>{{ contextTableItems }}</pre>
+                    <pre>{{ selectedTableItems }}</pre>
                 </v-card-text>
                 <v-card-actions class="justify-end">
+                    <v-btn variant="text" @click="confirmLinkedSources">Confirm</v-btn>
+                    
                     <v-btn variant="text" @click="closeLinkSourceDialog">Close</v-btn>
                 </v-card-actions>
             </v-card>

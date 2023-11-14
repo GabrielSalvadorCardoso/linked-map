@@ -11,9 +11,9 @@ export default {
         }
     },
     methods: {
-        getActiveTabName() {
-            return `Linked Map`// | ${this.activeTab}
-        },
+        // getActiveTabName() {
+        //     return `Linked Map`// | ${this.activeTab}
+        // },
         // setActiveTabName(tabName) {
         //     console.log(tabName)
         //     // globalStore.setActiveTab()
@@ -25,7 +25,7 @@ export default {
     <v-card>
         <v-layout>
             <v-navigation-drawer v-model="drawer" :rail="rail" permanent @click="rail = false">
-                <v-list-item class="header-item" prepend-avatar="https://json-ld.org/images/json-ld-data-24.png" :title="getActiveTabName()" nav>
+                <v-list-item class="header-item" prepend-avatar="https://json-ld.org/images/json-ld-data-24.png" :title="globalStore.activeTab" nav>
                     <template v-slot:append>
                         <v-btn variant="text" icon="mdi-chevron-left" @click.stop="rail = !rail"></v-btn>
                     </template>
@@ -34,8 +34,8 @@ export default {
                 <v-divider></v-divider>
   
                 <v-list density="compact" nav>
-                    <v-list-item prepend-icon="mdi-home-city" title="Home" value="home" @click="globalStore.setActiveTab('Home')"></v-list-item>
-                    <v-list-item prepend-icon="mdi-account" title="Link Sources" value="account" @click="globalStore.setActiveTab('Link Sources')"></v-list-item>
+                    <v-list-item prepend-icon="mdi-google-maps" title="Home" value="home" @click="globalStore.setActiveTab('Main Map')"></v-list-item>
+                    <v-list-item prepend-icon="mdi-source-merge" title="Link Sources" value="account" @click="globalStore.setActiveTab('Link Sources')"></v-list-item>
                     <!-- <v-list-item prepend-icon="mdi-account-group-outline" title="Users" value="users" @click="globalStore.setActiveTab('Users')"></v-list-item> -->
                 </v-list>
             </v-navigation-drawer>
