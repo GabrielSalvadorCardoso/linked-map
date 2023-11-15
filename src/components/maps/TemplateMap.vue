@@ -2,7 +2,8 @@
 import "leaflet/dist/leaflet.css";
 import { LMap, LTileLayer } from "@vue-leaflet/vue-leaflet";
 import FeatureRender from './FeatureRender.vue';
-
+// @ts-ignore
+import { useGlobalStore } from "@/stores/GlobalStore";
 export default {
     // declaração de componentes que serão usados no componente TemplateMap
     components: {
@@ -15,7 +16,8 @@ export default {
     data() {
         return {
             zoom: 4,
-            geojson: []
+            geojson: [],
+            globalStore: useGlobalStore(),
         };
     },
     methods: {
@@ -26,7 +28,12 @@ export default {
         //     const json = await response.json()
         //     this.geojson = json
         // }
-    }
+    },
+    // watch: {
+    //     'sourcesLinks': function() {
+            
+    //     }
+    // }
 };
 
 </script>
@@ -38,10 +45,12 @@ export default {
                         name="OpenStreetMap">
             </LTileLayer>
             
-            <FeatureRender  v-for="(feature, index) in geojson['features']"
-                            :key="feature.id"
-                            :geojson="geojson['features'][index]" />
-            
+            <div v-if="globalStore.currentLayer !== null">
+                <FeatureRender  v-for="feature in globalStore.currentLayer['features']"
+                                
+                                :key="feature.id"
+                                :geojson="feature" />
+            </div>
             
         </LMap>
     </div>

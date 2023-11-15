@@ -13,14 +13,16 @@ export interface LinkinItem {
 
 export interface GlobalStoreState {
     activeTab: string,
-    sourcesLinks: LinkinMap
+    sourcesLinks: LinkinMap,
+    currentLayer: any
 }
 
 export const useGlobalStore = defineStore("GlobalStore", {
     state: ():GlobalStoreState => {
         return {
             activeTab: "Main Map",
-            sourcesLinks: {}
+            sourcesLinks: {},
+            currentLayer: null
         }
     },
     actions: {
@@ -29,6 +31,9 @@ export const useGlobalStore = defineStore("GlobalStore", {
         },
         addSourcesLink(sourcesLink:LinkinMap) {
             this.sourcesLinks = {...this.sourcesLinks, ...sourcesLink}
+        },
+        setCurrentLayer(layer:any) {
+            this.currentLayer = layer
         }
     }
 })

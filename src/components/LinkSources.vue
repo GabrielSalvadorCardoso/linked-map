@@ -1,7 +1,7 @@
 <script lang="ts">
 // import { reactive, } from 'vue'
 // @ts-ignore
-import * as jsonld from 'jsonld';
+// import * as jsonld from 'jsonld';
 // @ts-ignore
 import LinkSourcesConfirmationTable from './tables/LinkSourcesConfirmationTable.vue'
 // @ts-ignore

@@ -6,6 +6,8 @@ import { LinkinItem } from "@/stores/GlobalStore";
 // @ts-ignore
 import MergeDataDialog from "../maps/MergeDataDialog.vue";
 
+const CONTENT_TYPE_GEOJSON = "application/geo+json"
+
 type LinksDrawerProps = {
     drawer: boolean,
     isMergeDataDialogOpen: boolean,
@@ -31,18 +33,58 @@ export default {
         getActiveTabName() {
             return `Linked Sources`// | ${this.activeTab}
         },
+        async mergeWithFeatures(features: any[], featuresLinks:LinkinItem, dataset: any[], datasetLinks:LinkinItem[]) {
+            let _features = []
+            for(let i=0; i<features.length; i++) {
+                let matchs = []
+                let matchsObject:any = {}
+                for(let k=0; k<dataset.length; k++) {
+                    matchs = dataset[k].filter((_obj:any) => _obj[datasetLinks[k].term] === features[i]["properties"][featuresLinks.term])
+                    matchsObject[datasetLinks[k].source] = matchs
+                }
+                
+                let properties = {...features[i]["properties"], ...matchsObject}
+                features[i]["properties"] = properties
+                _features.push(features[i])
+            }
+            return _features
+        },
         async mergeData(sourcesLink:LinkinItem[]) {
             this.openMergeDataDialog()
+            let dataset = []
+            let datasetLinks:LinkinItem[] = []
+
+            let features = []
+            let featuresLinks:LinkinItem|null = null
+            
+            let collectedFeatures = false
             for(let i=0; i<sourcesLink.length; i++) {
                 let response = await this.fetchData(sourcesLink[i].source)
-                console.log(response)
+                let data = await response.json()
+                if(response.headers.get("content-type") === CONTENT_TYPE_GEOJSON && !collectedFeatures) {
+                    features = data["features"]
+                    collectedFeatures = true
+                    featuresLinks = sourcesLink[i]
+                } else {
+                    dataset.push(data)
+                    datasetLinks.push(sourcesLink[i])
+                }
             }
+            
+            if(collectedFeatures) {
+                let _features = await this.mergeWithFeatures(features, featuresLinks as LinkinItem, dataset, datasetLinks)
+                this.globalStore.setCurrentLayer({"type": "FeatureCollection", "features": _features})
+            } else {
+                // this.mergeData(dataset, datasetLinks)
+            }
+            
             this.closeMergeDataDialog()
         },
         async fetchData (url:string) {
             const resp = await fetch(url)
-            const json = await resp.json()
-            return json
+            // console.log(resp)
+            // const json = await resp.json()
+            return resp
         },
         openMergeDataDialog() {
             this.isMergeDataDialogOpen = true
