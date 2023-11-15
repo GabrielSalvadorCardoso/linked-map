@@ -7,6 +7,8 @@ import { LinkinItem } from "@/stores/GlobalStore";
 import MergeDataDialog from "../maps/MergeDataDialog.vue";
 
 const CONTENT_TYPE_GEOJSON = "application/geo+json"
+const JSONLD_ACONTEXT_KEYWORD = "@context"
+const JSONLD_AID_KEYWORD = "@id"
 
 type LinksDrawerProps = {
     drawer: boolean,
@@ -33,14 +35,23 @@ export default {
         getActiveTabName() {
             return `Linked Sources`// | ${this.activeTab}
         },
-        async mergeWithFeatures(features: any[], featuresLinks:LinkinItem, dataset: any[], datasetLinks:LinkinItem[]) {
+        async mergeWithFeatures(features: any[], featuresLinks:LinkinItem, featuresMetadata:any, dataset: any[], datasetLinks:LinkinItem[], metadataset: any[]) {
             let _features = []
             for(let i=0; i<features.length; i++) {
                 let matchs = []
                 let matchsObject:any = {}
                 for(let k=0; k<dataset.length; k++) {
+                    let idAttribute = (Object.entries(metadataset[k][JSONLD_ACONTEXT_KEYWORD]).find((keyVal) => keyVal[1] === JSONLD_AID_KEYWORD) as unknown as any)[0]
                     matchs = dataset[k].filter((_obj:any) => _obj[datasetLinks[k].term] === features[i]["properties"][featuresLinks.term])
-                    matchsObject[datasetLinks[k].source] = matchs
+                    matchs = matchs.map((_match:any) => {
+                        let attrVal = _match[idAttribute]
+                        let newMatch:any = {}
+                        newMatch[`${datasetLinks[k].source}/${attrVal}`] = _match
+                        return newMatch
+                    })
+                    matchs.forEach((m:any) => {
+                        matchsObject = {...matchsObject, ...m}
+                    })
                 }
                 
                 let properties = {...features[i]["properties"], ...matchsObject}
@@ -52,27 +63,32 @@ export default {
         async mergeData(sourcesLink:LinkinItem[]) {
             this.openMergeDataDialog()
             let dataset = []
+            let metadataset = []
             let datasetLinks:LinkinItem[] = []
 
             let features = []
             let featuresLinks:LinkinItem|null = null
-            
+            let featuresMetadata:any = null;
             let collectedFeatures = false
+
             for(let i=0; i<sourcesLink.length; i++) {
                 let response = await this.fetchData(sourcesLink[i].source)
                 let data = await response.json()
+                let metadata = await this.fetchMetadata(sourcesLink[i].source)
                 if(response.headers.get("content-type") === CONTENT_TYPE_GEOJSON && !collectedFeatures) {
                     features = data["features"]
                     collectedFeatures = true
                     featuresLinks = sourcesLink[i]
+                    featuresMetadata = metadata
                 } else {
                     dataset.push(data)
                     datasetLinks.push(sourcesLink[i])
+                    metadataset.push(metadata)
                 }
             }
             
             if(collectedFeatures) {
-                let _features = await this.mergeWithFeatures(features, featuresLinks as LinkinItem, dataset, datasetLinks)
+                let _features = await this.mergeWithFeatures(features, featuresLinks as LinkinItem, featuresMetadata, dataset, datasetLinks, metadataset)
                 this.globalStore.setCurrentLayer({"type": "FeatureCollection", "features": _features})
             } else {
                 // this.mergeData(dataset, datasetLinks)
@@ -85,6 +101,13 @@ export default {
             // console.log(resp)
             // const json = await resp.json()
             return resp
+        },
+        async fetchMetadata(url:string) {
+            const resp = await fetch(url, {
+                method: 'OPTIONS'
+            })
+            const json = await resp.json()
+            return json
         },
         openMergeDataDialog() {
             this.isMergeDataDialogOpen = true
