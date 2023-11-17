@@ -37,7 +37,7 @@ export default {
         <v-dialog v-model="isDialogOpen" :scrim="false" persistent width="auto">
             <v-card color="primary">
                 <v-card-text>
-                    We are linkind the data, please wait...
+                    We are linking the data, please wait...
                     <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
                 </v-card-text>
             </v-card>
