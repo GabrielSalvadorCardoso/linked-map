@@ -4,23 +4,12 @@ import { type DataDescriptionMap, type TableItem } from '../LinkSources.vue'
 import LinkSourcesConfirmationTable from './LinkSourcesConfirmationTable.vue'
 import type { LinkinItem, LinkinMap } from '@/stores/GlobalStore';
 import { useGlobalStore } from "@/stores/GlobalStore";
-// type LinkSourcesTableProps = {
-//     contexts: DataDescriptionMap
-// }
 const globalStore = useGlobalStore()
 const props = defineProps<{
     contexts: DataDescriptionMap,
-    contextTableItems: TableItem[],
-    // selectedTableItems: TableItem[],
-    // isLinkSourceDialogOpen: boolean
+    contextTableItems: TableItem[]
 }>()
 const contexts = props.contexts
-// watch(
-//   () => props.selectedTableItems,
-//   () => {
-//     console.log('props value changed', props.selectedTableItems)
-//   }
-// )
 
 const emits = defineEmits(['confirmLinkedSources', 'confirmLinkedSources'])
 
@@ -87,31 +76,6 @@ const setLinkSourcesSelection = (event:any, item:TableItem) => {
         })
     }
 }
-// export default {
-//     name: 'LinkSourcesTable',
-//     props: {
-        
-//         contexts: {} as any, // DataDescriptionMap
-//         contextTableItems: [] as TableItem[] as any, //TableItem[]
-//         isLinkSourceDialogOpen: Boolean,
-//         closeLinkSourceDialog: Object,
-//         confirmLinkedSources: Object,
-//         selectedTableItems: [] as TableItem[] as any
-//     },
-//     data() {
-//         return {
-//             // contexts: {} as DataDescriptionMap
-//         }
-//     },
-//     watch: {
-//         'contexts': function() {
-            
-//         }
-//     },
-//     methods: {
-        
-//     }
-// }
 </script>
 <template>
     <div class="container">

@@ -14,7 +14,13 @@ export interface LinkinItem {
 export interface GlobalStoreState {
     activeTab: string,
     sourcesLinks: LinkinMap,
-    currentLayer: any
+    currentLayer: any,
+    isNavigationDrawerOpen: boolean,
+    isLinksDrawerOpen: boolean,
+    navigationDrawerRail: boolean,
+    linksDrawerRail: boolean,
+    mainContentMarginLeft: string
+    mainContentMarginRight: string
 }
 
 export const useGlobalStore = defineStore("GlobalStore", {
@@ -22,7 +28,13 @@ export const useGlobalStore = defineStore("GlobalStore", {
         return {
             activeTab: "Main Map",
             sourcesLinks: {},
-            currentLayer: null
+            currentLayer: null,
+            isNavigationDrawerOpen: false,
+            navigationDrawerRail: true,
+            isLinksDrawerOpen: false,
+            linksDrawerRail: true,
+            mainContentMarginLeft: '56px',//mainContentMarginLeft: 256,
+            mainContentMarginRight: '56px'//mainContentMarginRight: 256,
         }
     },
     actions: {
@@ -34,6 +46,27 @@ export const useGlobalStore = defineStore("GlobalStore", {
         },
         setCurrentLayer(layer:any) {
             this.currentLayer = layer
+        },
+        toggleNavigationDrawer() {
+            this.isNavigationDrawerOpen = !this.isNavigationDrawerOpen;
+            console.log(this.isNavigationDrawerOpen)
+        },
+        setNavigationDrawerState(state:boolean) {
+            this.navigationDrawerRail = state
+            if(this.navigationDrawerRail) {
+                this.mainContentMarginLeft = '56px'
+            } else {
+                this.mainContentMarginLeft = '256px'
+            }
+        },
+        setLinksDrawerRail(state:boolean) {
+            this.linksDrawerRail = state
+            if(this.linksDrawerRail) {
+                this.mainContentMarginRight = '56px'
+            } else {
+                this.mainContentMarginRight = '256px'
+            }
+            // console.log(this.linksDrawerRail)
         }
     }
 })

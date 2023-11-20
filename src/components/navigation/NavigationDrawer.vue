@@ -4,23 +4,31 @@ import { useGlobalStore } from "@/stores/GlobalStore";
 export default {
     data () {
         return {
-            drawer: true,
-            rail: true,
-            activeTab: "home",
+            // drawer: true,
+            // rail: true,
             globalStore: useGlobalStore()
         }
     },
     methods: {
+        setNavigationDrawerState(event, rail) {
+            
+            let drawerCard = document.getElementById('drawerCard');
+            if(drawerCard) {
+                console.log(drawerCard.offsetWidth, rail)
+            }
+            
+            this.globalStore.setNavigationDrawerState(rail)
+        }
     }
 }
 </script>
 <template>
-    <v-card>
+    <v-card >
         <v-layout>
-            <v-navigation-drawer v-model="drawer" :rail="rail" permanent @click="rail = false">
+            <v-navigation-drawer id="drawerCard" v-bind="globalStore.isNavigationDrawerOpen" :rail="globalStore.navigationDrawerRail" permanent @click="($event, rail) => setNavigationDrawerState(event, false)">
                 <v-list-item class="header-item" prepend-avatar="https://json-ld.org/images/json-ld-data-24.png" :title="globalStore.activeTab" nav>
                     <template v-slot:append>
-                        <v-btn variant="text" icon="mdi-chevron-left" @click.stop="rail = !rail"></v-btn>
+                        <v-btn variant="text" icon="mdi-chevron-left" @click.stop="($event, rail) => setNavigationDrawerState($event, !rail)"></v-btn>
                     </template>
                 </v-list-item>
   

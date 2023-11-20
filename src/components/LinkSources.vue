@@ -1,15 +1,9 @@
 <script lang="ts">
-// import { reactive, } from 'vue'
-// @ts-ignore
-// import * as jsonld from 'jsonld';
-
-
 import LinkSourcesTable from './tables/LinkSourcesTable.vue'
 
-// @ts-ignore
 import DataDescription from '../models/DataDescription'
 // @ts-ignore
-import { LinkinMap, LinkinItem, useGlobalStore } from "@/stores/GlobalStore";
+import { useGlobalStore } from "@/stores/GlobalStore";
 
 // import SvgIcon from '@jamescoyle/vue-icon';
 // import { mdiCheckOutline } from '@mdi/js';
@@ -250,9 +244,7 @@ export default {
         closeContextViewDialog() {
             this.contextViewDialogOpen = false
             this.contextOpened = undefined
-        },
-        
-        
+        }
     }
 }
 </script>
@@ -306,50 +298,16 @@ export default {
                 </v-list-item>
             </v-list>
         </v-card>
-
-        <!-- <v-table v-if="Object.keys(contexts).length > 1" class="link-sources-table" density="compact">
-            <thead>
-                <tr>
-                    <th class="text-left"> </th>                    
-                    <th class="text-left">Semantic (@id)</th>                    
-                    <th class="text-left">Term</th>
-                    <th class="text-left">Source</th>
-                    <th class="text-left">Type (@type)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(item, index) in contextTableItems" :key="`${item.semantic}-${item.source}`">
-                    <td v-if="isUniqueSemanticItem(item)">
-                        <input type="checkbox" disabled/>
-                    </td>
-                    <td v-if="isFirstInDuplicationSemanticSet(item, index)" :rowspan="item.matchsWith.length+1">
-                        <input type="checkbox" v-on:click="($event:any) => setLinkSourcesSelection($event, item)" />
-                    </td>
-
-                    <td v-if="isUniqueSemanticItem(item)">{{ item.semantic }}</td>
-                    <td v-if="isFirstInDuplicationSemanticSet(item, index)" :rowspan="item.matchsWith.length+1">{{ item.semantic }}</td>
-
-                    <td>{{ item.term }}</td>
-                    <td>{{ item.source }}</td>
-                    <td>{{ item.type }}</td>
-                </tr>
-            </tbody>
-            
-        </v-table>
-        <v-btn class="link-sources-btn" v-if="Object.keys(contexts).length > 1" v-on:click="($event:any) => openLinkSourceDialog()" variant="outlined">
-            Link Sources
-        </v-btn> -->
         
     </div>
-    <LinkSourcesTable   :contexts="contexts"
-                        :contextTableItems="contextTableItems"
-                        
-                             />
+    <LinkSourcesTable :contexts="contexts" :contextTableItems="contextTableItems" />
 </template>
 
 <style scoped>
 .container {
-    margin: 10px 255px;
+    /* margin: 10px 255px; */
+    margin-left: v-bind('globalStore.mainContentMarginLeft');
+    /* margin-right: ; */
     display: flex;
     flex-direction: column;
     justify-content: center;

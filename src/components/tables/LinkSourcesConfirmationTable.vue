@@ -16,47 +16,6 @@ watch(
     isDialogOpen.value = props.isLinkSourceDialogOpen
   }
 )
-// export default {
-    // name: "LinkSourcesConfirmationTable",
-    // props: {
-    //     isLinkSourceDialogOpen: {type: Boolean, required: true},
-    //     selectedTableItems: {type: TableItem[], required: true}
-    // },
-    // setup(props) {
-    //     // setup() receives props as the first argument.
-    //     // console.log(props)
-    // },
-    // components: {
-        
-    // },
-//     data() {
-//         return {
-//             isDialogOpen: false,
-//             // contextTableItems: []
-//         }
-//     }, 
-//     methods: {
-//         callMe(){
-//             alert(`isLinkSourceDialogOpen: ${this.isLinkSourceDialogOpen}`)
-//         },
-//         closeLinkSourceDialog() {
-//             this.$emit('closeLinkSourceDialog')
-//         },
-//         confirmLinkedSources() {
-//             this.$emit('confirmLinkedSources')
-//             this.$emit('closeLinkSourceDialog')
-//         }
-//     },
-//     watch: {
-//         'isLinkSourceDialogOpen': function() {
-//             if(this.isLinkSourceDialogOpen) {
-//                 this.isDialogOpen = true
-//             } else {
-//                 this.isDialogOpen = false
-//             }
-//         }
-//     }
-// }
 </script>
 <template>
     <v-col cols="auto">

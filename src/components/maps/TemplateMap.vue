@@ -1,40 +1,22 @@
-<script>
+<script setup lang="ts">
 import "leaflet/dist/leaflet.css";
 import { LMap, LTileLayer } from "@vue-leaflet/vue-leaflet";
+// @ts-ignore
 import FeatureRender from './FeatureRender.vue';
 // import GridLayer from './GridLayer.vue'
 // @ts-ignore
 import { useGlobalStore } from "@/stores/GlobalStore";
-export default {
-    // declaração de componentes que serão usados no componente TemplateMap
-    components: {
-        LMap,
-        LTileLayer,
-        FeatureRender,
-        // LGridLayer
-        // LGeoJson,
-        // LPopup
-    },
-    data() {
-        return {
-            zoom: 4,
-            geojson: [],
-            // tileComponent: {
-            //     name: 'tile-component',
-            //     props: {
-            //         coords: {
-            //             type: Object,
-            //             required: true
-            //         }
-            //     },
-            //     template: '<div>Coords: {{coords.x}}, {{coords.y}}</div>'
-            // },
-            globalStore: useGlobalStore(),
-        };
-    },
-    methods: {
-    }
-};
+import { ref } from "vue";
+const globalStore = useGlobalStore()
+// const contentMarginLeft = ref(globalStore.mainContentMarginLeft)
+// interface TemplateMapProps {
+//     // isNavigationDrawerOpen: boolean,
+//     navigationDrawerRail: boolean
+// }
+
+// const props = defineProps<TemplateMapProps>()
+const zoom = ref(4)
+// const marginLeft = ref()
 
 </script>
 <template>
@@ -55,12 +37,20 @@ export default {
             
         </LMap>
     </div>
+    <!-- <div class="teste">{{contentMarginLeft}}</div> -->
+    <!-- <div class="teste">{{isNavigationDrawerOpen}}</div> -->
+    
     <!-- <button v-on:click="requestData()">Request Data</button> -->
 </template>
 <style>
+/* .teste {
+    text-align: center;
+} */
 .mapContainer {
-    height: 100vh;
+    height: 95vh;
     /* width: 100%; */
-    margin: 10px 255px;
+    margin-left: v-bind('globalStore.mainContentMarginLeft');
+    margin-right: v-bind('globalStore.mainContentMarginRight');
+    /* margin: 10px 255px; */
 }
 </style>
