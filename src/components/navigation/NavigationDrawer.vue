@@ -11,13 +11,6 @@ export default {
         }
     },
     methods: {
-        // getActiveTabName() {
-        //     return `Linked Map`// | ${this.activeTab}
-        // },
-        // setActiveTabName(tabName) {
-        //     console.log(tabName)
-        //     // globalStore.setActiveTab()
-        // }
     }
 }
 </script>

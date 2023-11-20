@@ -2,21 +2,19 @@
 // import { reactive, } from 'vue'
 // @ts-ignore
 // import * as jsonld from 'jsonld';
-// @ts-ignore
-import LinkSourcesConfirmationTable from './tables/LinkSourcesConfirmationTable.vue'
+
+
+import LinkSourcesTable from './tables/LinkSourcesTable.vue'
+
 // @ts-ignore
 import DataDescription from '../models/DataDescription'
 // @ts-ignore
-import { useGlobalStore } from "@/stores/GlobalStore";
-// @ts-ignore
-import { LinkinMap } from "@/stores/GlobalStore";
-// @ts-ignore
-import { LinkinItem } from "@/stores/GlobalStore";
+import { LinkinMap, LinkinItem, useGlobalStore } from "@/stores/GlobalStore";
 
 // import SvgIcon from '@jamescoyle/vue-icon';
 // import { mdiCheckOutline } from '@mdi/js';
 
-interface DataDescriptionMap {
+export interface DataDescriptionMap {
     [key:string]: DataDescription
 }
 
@@ -27,14 +25,14 @@ type LinkSourcesProps = {
     contexts: DataDescriptionMap,
     contextViewDialogOpen: boolean,
     contextOpened: any,
-    isLinkSourceDialogOpen: boolean,
+    // isLinkSourceDialogOpen: boolean,
     contextTableItems: TableItem[],
-    selectedTableItems: TableItem[],
+    // selectedTableItems: TableItem[],
     coincidentSemantics: any,
     globalStore: any
 }
 
-type TableItem = {
+export type TableItem = {
     type: string|null|undefined,
     term: string,
     semantic: string,
@@ -45,7 +43,7 @@ type TableItem = {
 export default {
     name: "LinkSources",
     components: {
-        LinkSourcesConfirmationTable
+        LinkSourcesTable
     },
     data():LinkSourcesProps {
         return {
@@ -63,43 +61,16 @@ export default {
             contextViewDialogOpen: false,
             contextOpened: undefined,
 
-            isLinkSourceDialogOpen: false,
-            /*
-            termos com a mesma semântica (mesmo @id) e, opcionalmente com o mesmo tipo (@type),
-            são passíveis de servirem como atributos de ligação entre fontes diferentes.
-            Ou seja, se for encontrado dois termos de diferentes fontes (condição 1)
-            com semânticas iguais (condição 2), deve-se destacar este termos para posteriormente
-            quentionar o usuário se este deseja ligar essas duas fontes de dados usando esses atributos
-             */
+            // isLinkSourceDialogOpen: false,
             contextTableItems: [],
             coincidentSemantics: {
                 // "schema:identifier": 2
             },
-            selectedTableItems: [],
+            // selectedTableItems: [],
             globalStore: useGlobalStore()
         }
     }, 
     methods: {
-        // Requests
-        // async requestEntryPoint() {
-        //     event.preventDefault()
-        //     this.fetchMetadata(entryPoint.url)
-        //     .then((metadata) => {
-        //         this.fetchEntryPoint()
-        //         .then((data) => {
-        //             this.mergeDataWithDescription(data, metadata)
-        //             .then((contextualizedData) => {
-        //                 // console.log(contextualizedData)
-        //                 jsonld.expand(contextualizedData)
-        //                 .then((proccessedJSONLD) => {
-        //                     // console.log(proccessedJSONLD)
-        //                     this.entryPoint.proccessedJSONLD = proccessedJSONLD
-        //                 })
-        //             })
-        //         })
-                
-        //     })
-        // },
         async fetchMetadata(url:string) {
             const resp = await fetch(url, {
                 method: 'OPTIONS'
@@ -280,71 +251,8 @@ export default {
             this.contextViewDialogOpen = false
             this.contextOpened = undefined
         },
-
-        openLinkSourceDialog() {
-            this.isLinkSourceDialogOpen = true
-        },
-        closeLinkSourceDialog() {
-            this.isLinkSourceDialogOpen = false
-        },
-
-        // interface control
-        isUniqueSemanticItem(item:TableItem):boolean {
-            // return item.semantic !== null && !Object.keys(this.coincidentSemantics).includes(item.semantic)
-            if(item.matchsWith.length === 0) {
-                return true
-            } else {
-                let matchItems = this.contextTableItems.filter((_item:TableItem, index: number) => item.matchsWith.includes(index))
-                // matchItems.push(item)
-                return this.itemsFromSameSource(item, matchItems)
-            }
-        },
-        itemsFromSameSource(firstItem:TableItem, items:TableItem[]):boolean {
-            let source = firstItem.source
-            let diffSourceItem = items.find((_item) => _item.source !== source)
-            return diffSourceItem === undefined
-
-        },
-        isFirstInDuplicationSemanticSet(item:TableItem, itemIndex:number):boolean {
-            if(this.isUniqueSemanticItem(item)) {
-                return false
-            } else {
-                return itemIndex < Math.min(...item.matchsWith)
-            }
-        },
-        setLinkSourcesSelection(event:any, item:TableItem) {
-            if(event.target.checked) {
-                this.selectedTableItems.push(item)
-            } else {
-                this.selectedTableItems = this.selectedTableItems.filter((_item:TableItem) => {
-                    return (
-                        _item.semantic !== item.semantic || _item.source !== item.source ||
-                        _item.term !== item.term || _item.type !== item.type
-                    )
-                })
-            }
-        },
-        confirmLinkedSources() {
-            let sourcesLinks:LinkinMap = {}
-            
-            for(let i=0; i<this.selectedTableItems.length; i++) {
-                let item = this.selectedTableItems[i]
-                let matchItems = this.contextTableItems.filter((_item:TableItem, index: number) => item.matchsWith.includes(index))
-                matchItems.push(item)
-                let nameOfTheSet = matchItems.map(_item => _item.source).join(" + ")
-                let _matchItems:LinkinItem[] = matchItems.map(_item => {
-                    return {
-                        semantic: _item.semantic,
-                        term: _item.term,
-                        type: _item.type,
-                        source: _item.source
-                    }
-                    
-                })
-                sourcesLinks[nameOfTheSet] = _matchItems;
-            }
-            this.globalStore.addSourcesLink(sourcesLinks)
-        }
+        
+        
     }
 }
 </script>
@@ -398,13 +306,8 @@ export default {
                 </v-list-item>
             </v-list>
         </v-card>
-        <!-- <pre>{{ entryPoint.data }}</pre>
-        <pre>{{ entryPoint.metadata }}</pre>
-        <pre>{{ entryPoint.contextualizedData }}</pre> -->
-        <!-- <pre>{{ entryPoint.proccessedJSONLD }}</pre> -->
-        <!-- <pre>{{contexts}}</pre> -->
 
-        <v-table v-if="Object.keys(contexts).length > 1" class="link-sources-table" density="compact">
+        <!-- <v-table v-if="Object.keys(contexts).length > 1" class="link-sources-table" density="compact">
             <thead>
                 <tr>
                     <th class="text-left"> </th>                    
@@ -431,15 +334,17 @@ export default {
                     <td>{{ item.type }}</td>
                 </tr>
             </tbody>
-            <LinkSourcesConfirmationTable   :isLinkSourceDialogOpen="isLinkSourceDialogOpen"
-                                            v-on:closeLinkSourceDialog="closeLinkSourceDialog"
-                                            v-on:confirmLinkedSources="confirmLinkedSources"
-                                            :selectedTableItems="selectedTableItems" />
+            
         </v-table>
         <v-btn class="link-sources-btn" v-if="Object.keys(contexts).length > 1" v-on:click="($event:any) => openLinkSourceDialog()" variant="outlined">
             Link Sources
-        </v-btn>
+        </v-btn> -->
+        
     </div>
+    <LinkSourcesTable   :contexts="contexts"
+                        :contextTableItems="contextTableItems"
+                        
+                             />
 </template>
 
 <style scoped>

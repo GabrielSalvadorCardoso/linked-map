@@ -2,6 +2,7 @@
 import "leaflet/dist/leaflet.css";
 import { LMap, LTileLayer } from "@vue-leaflet/vue-leaflet";
 import FeatureRender from './FeatureRender.vue';
+// import GridLayer from './GridLayer.vue'
 // @ts-ignore
 import { useGlobalStore } from "@/stores/GlobalStore";
 export default {
@@ -9,7 +10,8 @@ export default {
     components: {
         LMap,
         LTileLayer,
-        FeatureRender
+        FeatureRender,
+        // LGridLayer
         // LGeoJson,
         // LPopup
     },
@@ -17,23 +19,21 @@ export default {
         return {
             zoom: 4,
             geojson: [],
+            // tileComponent: {
+            //     name: 'tile-component',
+            //     props: {
+            //         coords: {
+            //             type: Object,
+            //             required: true
+            //         }
+            //     },
+            //     template: '<div>Coords: {{coords.x}}, {{coords.y}}</div>'
+            // },
             globalStore: useGlobalStore(),
         };
     },
     methods: {
-        // async requestData() {
-        //     event.preventDefault()
-        //     const response = await fetch("http://bcim.geoapi/lim-unidade-federacao-a-list")
-        //     // const response = await fetch("http://bcim.geoapi/lim-municipio-a-list")
-        //     const json = await response.json()
-        //     this.geojson = json
-        // }
-    },
-    // watch: {
-    //     'sourcesLinks': function() {
-            
-    //     }
-    // }
+    }
 };
 
 </script>
@@ -44,6 +44,7 @@ export default {
                         layer-type="base"
                         name="OpenStreetMap">
             </LTileLayer>
+            <!-- <l-grid-layer :tile-component="tileComponent"></l-grid-layer> -->
             
             <div v-if="globalStore.currentLayer !== null">
                 <FeatureRender  v-for="feature in globalStore.currentLayer['features']"
