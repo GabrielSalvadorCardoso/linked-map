@@ -29,8 +29,7 @@ const requestEntryPointMetadata = async () => {
         <v-text-field class="url-input" persistent-placeholder clearable label="Resource URL" v-model="url" variant="outlined"></v-text-field>
         <v-btn class="execute-btn" v-on:click="($event:any) => requestEntryPointMetadata()" variant="outlined">Add</v-btn>
         <div v-for="navEntryPoint in Object.entries(globalStore.navigationEntryPointsLoaded)" :key="navEntryPoint[0]">
-            <entry-point-expansion-panel :title="navEntryPoint[0]" :content="navEntryPoint[1]">
-            </entry-point-expansion-panel>
+            <entry-point-expansion-panel :title="navEntryPoint[0]" :context="navEntryPoint[1]"></entry-point-expansion-panel>
         </div>
     </div>
 </template>

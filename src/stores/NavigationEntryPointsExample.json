@@ -1,0 +1,258 @@
+{
+    "@context": {
+        "schema": "https://schema.org/",
+        "geojson": "https://purl.org/geojson/vocab#",
+        "adm-edif-pub-militar-a-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "adm-edif-pub-militar-p-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "adm-posto-fiscal-p-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "eco-edif-agropec-ext-vegetal-pesca-p-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "eco-ext-mineral-a-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "eco-ext-mineral-p-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "enc-est-gerad-energia-eletrica-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "enc-hidreletrica-p-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "enc-termeletrica-p-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "enc-banco-areia-a-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "hid-barragem-l-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "hid-barragem-p-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "hid-corredeira-l-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "hid-corredeira-p-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "hid-ilha-a-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "hid-massa-dagua-a-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "hid-queda-dagua-l-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "hid-recife-a-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "hid-rocha-em-agua-a-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "hid-sumidouro-vertedouro-p-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "hid-terreno-sujeito-inundacao-a-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "hid-trecho-drenagem-l-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "hid-trecho-massa-dagua-a-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "lim-municipio-a-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "lim-outros-limites-oficiais-l-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "lim-pais-a-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "lim-terra-indigena-a-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "lim-terra-indigena-p-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "lim-unidade-conservacao-nao-snuc-a-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "lim-unidade-federacao-a-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "lim-unidade-protecao-integral-a-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "lim-unidade-uso-sustentavel-a-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "loc-aglomerado-rural-isolado-p-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "loc-aldeia-indigena-p-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "loc-area-edificada-a-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "loc-capital-p-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "loc-cidade-p-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "loc-vila-p-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "rel-curva-batimetrica-l-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "rel-curva-nivel-l-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "rel-duna-a-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "rel-elemento-fisiografico-natural-l-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "rel-elemento-fisiografico-natural-p-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "rel-pico-p-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "rel-ponto-cotado-altimetrico-p-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "rel-ponto-cotado-batimetrico-p-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "tra-eclusa-l-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "tra-edif-const-aeroportuaria-p-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "tra-edif-const-portuaria-p-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "tra-edif-metro-ferroviaria-p-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "tra-pista-ponto-pouso-p-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "tra-ponte-l-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "tra-sinalizacao-p-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "tra-travessia-l-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "tra-travessia-p-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "tra-trecho-duto-l-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "tra-trecho-ferroviario-l-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "tra-trecho-hidroviario-l-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "tra-trecho-rodoviario-l-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "tra-tunel-l-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "veg-brejo-pantano-a-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "veg-mangue-a-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        },
+        "veg-veg-restinga-a-list": {
+            "@id": "geojson:FeatureCollection",
+            "@type": "@id"
+        }
+    }
+}

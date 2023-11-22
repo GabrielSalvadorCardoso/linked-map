@@ -1,5 +1,7 @@
+import type HyperResourceContext from "@/models/HyperResourceContext";
 import { defineStore } from "pinia";
-
+const NAV_DRAWER_OPEN_WIDTH = '256px'
+const NAV_DRAWER_CLOSE_WIDTH = '56px'
 const SOURCES_LINK = {
     "http://127.0.0.1:8001/taxas-rendimento-escolar-por-municipio-list/filter/codigo_municipio/eq/3304557 + http://bcim.geoapi/lim-municipio-a-list/filter/geocodigo/eq/3304557": [
         {
@@ -33,6 +35,10 @@ export interface NavigationEntryPoints {
     [key:string]: Object
 }
 
+export interface NavigationEndPoints {
+    [key:string]: HyperResourceContext
+}
+
 export interface GlobalStoreState {
     activeTab: string,
     sourcesLinks: LinkinMap,
@@ -43,7 +49,8 @@ export interface GlobalStoreState {
     linksDrawerRail: boolean,
     mainContentMarginLeft: string,
     mainContentMarginRight: string,
-    navigationEntryPointsLoaded: NavigationEntryPoints
+    navigationEntryPointsLoaded: NavigationEntryPoints,
+    navigationEndPointsLoaded: NavigationEndPoints
 }
 
 export const useGlobalStore = defineStore("GlobalStore", {
@@ -58,7 +65,8 @@ export const useGlobalStore = defineStore("GlobalStore", {
             linksDrawerRail: true,
             mainContentMarginLeft: '56px',//mainContentMarginLeft: 256,
             mainContentMarginRight: '56px',//mainContentMarginRight: 256,
-            navigationEntryPointsLoaded: {}
+            navigationEntryPointsLoaded: {},
+            navigationEndPointsLoaded: {}
         }
     },
     actions: {
@@ -80,25 +88,27 @@ export const useGlobalStore = defineStore("GlobalStore", {
         setNavigationDrawerState(state:boolean) {
             this.navigationDrawerRail = state
             if(this.navigationDrawerRail) {
-                this.mainContentMarginLeft = '56px'
+                this.mainContentMarginLeft = NAV_DRAWER_CLOSE_WIDTH
             } else {
-                this.mainContentMarginLeft = '256px'
+                this.mainContentMarginLeft = NAV_DRAWER_OPEN_WIDTH
             }
         },
         setLinksDrawerRail(state:boolean) {
             this.linksDrawerRail = state
             if(this.linksDrawerRail) {
-                this.mainContentMarginRight = '56px'
+                this.mainContentMarginRight = NAV_DRAWER_CLOSE_WIDTH
             } else {
-                this.mainContentMarginRight = '256px'
+                this.mainContentMarginRight = NAV_DRAWER_OPEN_WIDTH
             }
-            // console.log(this.linksDrawerRail)
         },
 
         addNavigationEntryPoint(navigationEntryPoint: NavigationEntryPoints) {
-            
             this.navigationEntryPointsLoaded = {...this.navigationEntryPointsLoaded, ...navigationEntryPoint}
-            // console.log(this.navigationEntryPointsLoaded)
+        },
+        addNavigationEndPoint(navigationEndPointsLoaded: NavigationEndPoints) {
+            this.navigationEndPointsLoaded = {...this.navigationEndPointsLoaded, ...navigationEndPointsLoaded}
         }
+
+        
     }
 })
