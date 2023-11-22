@@ -1,7 +1,7 @@
 <script lang="ts">
-import LinkSourcesTable from './tables/LinkSourcesTable.vue'
+import LinkSourcesTable from '../tables/LinkSourcesTable.vue'
 
-import DataDescription from '../models/DataDescription'
+import DataDescription from '../../models/DataDescription'
 // @ts-ignore
 import { useGlobalStore } from "@/stores/GlobalStore";
 

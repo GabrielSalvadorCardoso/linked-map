@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { type TableItem } from "../LinkSources.vue"
+import { type TableItem } from "../workspace/LinkSources.vue"
 interface LinkSourcesConfirmationTableProps {
     isLinkSourceDialogOpen: boolean,
     selectedTableItems: TableItem[]

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { type DataDescriptionMap, type TableItem } from '../LinkSources.vue'
+import { type DataDescriptionMap, type TableItem } from '../workspace/LinkSources.vue'
 import LinkSourcesConfirmationTable from './LinkSourcesConfirmationTable.vue'
 import type { LinkinItem, LinkinMap } from '@/stores/GlobalStore';
 import { useGlobalStore } from "@/stores/GlobalStore";

@@ -8,15 +8,7 @@ import FeatureRender from './FeatureRender.vue';
 import { useGlobalStore } from "@/stores/GlobalStore";
 import { ref } from "vue";
 const globalStore = useGlobalStore()
-// const contentMarginLeft = ref(globalStore.mainContentMarginLeft)
-// interface TemplateMapProps {
-//     // isNavigationDrawerOpen: boolean,
-//     navigationDrawerRail: boolean
-// }
-
-// const props = defineProps<TemplateMapProps>()
 const zoom = ref(4)
-// const marginLeft = ref()
 
 </script>
 <template>

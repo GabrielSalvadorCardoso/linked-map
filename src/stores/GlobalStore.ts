@@ -1,5 +1,23 @@
 import { defineStore } from "pinia";
 
+const SOURCES_LINK = {
+    "http://127.0.0.1:8001/taxas-rendimento-escolar-por-municipio-list/filter/codigo_municipio/eq/3304557 + http://bcim.geoapi/lim-municipio-a-list/filter/geocodigo/eq/3304557": [
+        {
+            source: "http://bcim.geoapi/lim-municipio-a-list/filter/geocodigo/eq/3304557",
+            term: "geocodigo",
+            semantic: "schema:identifier",
+            type: "schema:StructuredValue"
+        },
+        {
+            source: "http://127.0.0.1:8001/taxas-rendimento-escolar-por-municipio-list/filter/codigo_municipio/eq/3304557",
+            term: "codigo_municipio",
+            semantic: "schema:identifier",
+            type: "schema:StructuredValue"
+        }
+    
+    ]
+}
+
 export interface LinkinMap {
     [key:string]: LinkinItem[]
 }
@@ -11,6 +29,10 @@ export interface LinkinItem {
     source: string
 }
 
+export interface NavigationEntryPoints {
+    [key:string]: Object
+}
+
 export interface GlobalStoreState {
     activeTab: string,
     sourcesLinks: LinkinMap,
@@ -19,22 +41,24 @@ export interface GlobalStoreState {
     isLinksDrawerOpen: boolean,
     navigationDrawerRail: boolean,
     linksDrawerRail: boolean,
-    mainContentMarginLeft: string
-    mainContentMarginRight: string
+    mainContentMarginLeft: string,
+    mainContentMarginRight: string,
+    navigationEntryPointsLoaded: NavigationEntryPoints
 }
 
 export const useGlobalStore = defineStore("GlobalStore", {
     state: ():GlobalStoreState => {
         return {
-            activeTab: "Main Map",
-            sourcesLinks: {},
+            activeTab: "API Navigation",//"Main Map",
+            sourcesLinks: SOURCES_LINK,
             currentLayer: null,
             isNavigationDrawerOpen: false,
             navigationDrawerRail: true,
             isLinksDrawerOpen: false,
             linksDrawerRail: true,
             mainContentMarginLeft: '56px',//mainContentMarginLeft: 256,
-            mainContentMarginRight: '56px'//mainContentMarginRight: 256,
+            mainContentMarginRight: '56px',//mainContentMarginRight: 256,
+            navigationEntryPointsLoaded: {}
         }
     },
     actions: {
@@ -42,6 +66,8 @@ export const useGlobalStore = defineStore("GlobalStore", {
             this.activeTab = tabName
         },
         addSourcesLink(sourcesLink:LinkinMap) {
+            
+                                
             this.sourcesLinks = {...this.sourcesLinks, ...sourcesLink}
         },
         setCurrentLayer(layer:any) {
@@ -67,6 +93,12 @@ export const useGlobalStore = defineStore("GlobalStore", {
                 this.mainContentMarginRight = '256px'
             }
             // console.log(this.linksDrawerRail)
+        },
+
+        addNavigationEntryPoint(navigationEntryPoint: NavigationEntryPoints) {
+            
+            this.navigationEntryPointsLoaded = {...this.navigationEntryPointsLoaded, ...navigationEntryPoint}
+            // console.log(this.navigationEntryPointsLoaded)
         }
     }
 })

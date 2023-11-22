@@ -40,7 +40,7 @@ export default {
     <LGeoJson :geojson="geojson" >
         <l-popup>
           <!-- {{ formatProperties(geojson['properties']) }} -->
-            <v-simple-table dense height="300px">
+            <v-table dense height="300px">
                 <template v-slot:default>
                     <tr v-for="entry in Object.entries(geojson['properties'])" :key="entry[0]">
                         <td v-if="!isObject(entry[1])">{{entry[0]}}</td>
@@ -63,7 +63,7 @@ export default {
                         </td>
                     </tr>
                 </template>
-            </v-simple-table>
+            </v-table>
         </l-popup>
     </LGeoJson>
 </template>

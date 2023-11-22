@@ -1,7 +1,5 @@
-<script setup>
+<script setup lang="ts">
 import { useGlobalStore } from "@/stores/GlobalStore"
-// import { storeToRefs } from "pinia"
-// const { activeTab } = storeToRefs(useGlobalStore())
 const globalStore = useGlobalStore()
 </script>
 
