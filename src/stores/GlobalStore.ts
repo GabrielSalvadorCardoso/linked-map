@@ -1,24 +1,25 @@
 import type HyperResourceContext from "@/models/HyperResourceContext";
+import type LinkTerm from "@/models/LinkTerm";
 import { defineStore } from "pinia";
 const NAV_DRAWER_OPEN_WIDTH = '256px'
 const NAV_DRAWER_CLOSE_WIDTH = '56px'
-const SOURCES_LINK = {
-    "http://127.0.0.1:8001/taxas-rendimento-escolar-por-municipio-list/filter/codigo_municipio/eq/3304557 + http://bcim.geoapi/lim-municipio-a-list/filter/geocodigo/eq/3304557": [
-        {
-            source: "http://bcim.geoapi/lim-municipio-a-list/filter/geocodigo/eq/3304557",
-            term: "geocodigo",
-            semantic: "schema:identifier",
-            type: "schema:StructuredValue"
-        },
-        {
-            source: "http://127.0.0.1:8001/taxas-rendimento-escolar-por-municipio-list/filter/codigo_municipio/eq/3304557",
-            term: "codigo_municipio",
-            semantic: "schema:identifier",
-            type: "schema:StructuredValue"
-        }
+// const SOURCES_LINK = {
+//     "http://127.0.0.1:8001/taxas-rendimento-escolar-por-municipio-list/filter/codigo_municipio/eq/3304557 + http://bcim.geoapi/lim-municipio-a-list/filter/geocodigo/eq/3304557": [
+//         {
+//             source: "http://bcim.geoapi/lim-municipio-a-list/filter/geocodigo/eq/3304557",
+//             term: "geocodigo",
+//             semantic: "schema:identifier",
+//             type: "schema:StructuredValue"
+//         },
+//         {
+//             source: "http://127.0.0.1:8001/taxas-rendimento-escolar-por-municipio-list/filter/codigo_municipio/eq/3304557",
+//             term: "codigo_municipio",
+//             semantic: "schema:identifier",
+//             type: "schema:StructuredValue"
+//         }
     
-    ]
-}
+//     ]
+// }
 
 export interface LinkinMap {
     [key:string]: LinkinItem[]
@@ -32,7 +33,7 @@ export interface LinkinItem {
 }
 
 export interface NavigationEntryPoints {
-    [key:string]: Object
+    [key:string]: LinkTerm[]
 }
 
 export interface NavigationEndPoints {
@@ -50,14 +51,15 @@ export interface GlobalStoreState {
     mainContentMarginLeft: string,
     mainContentMarginRight: string,
     navigationEntryPointsLoaded: NavigationEntryPoints,
-    navigationEndPointsLoaded: NavigationEndPoints
+    navigationEndPointsLoaded: NavigationEndPoints,
+    registeredLinks: string[]
 }
 
 export const useGlobalStore = defineStore("GlobalStore", {
     state: ():GlobalStoreState => {
         return {
             activeTab: "API Navigation",//"Main Map",
-            sourcesLinks: SOURCES_LINK,
+            sourcesLinks: {},
             currentLayer: null,
             isNavigationDrawerOpen: false,
             navigationDrawerRail: true,
@@ -66,7 +68,8 @@ export const useGlobalStore = defineStore("GlobalStore", {
             mainContentMarginLeft: '56px',//mainContentMarginLeft: 256,
             mainContentMarginRight: '56px',//mainContentMarginRight: 256,
             navigationEntryPointsLoaded: {},
-            navigationEndPointsLoaded: {}
+            navigationEndPointsLoaded: {},
+            registeredLinks: []
         }
     },
     actions: {
@@ -83,7 +86,7 @@ export const useGlobalStore = defineStore("GlobalStore", {
         },
         toggleNavigationDrawer() {
             this.isNavigationDrawerOpen = !this.isNavigationDrawerOpen;
-            console.log(this.isNavigationDrawerOpen)
+            // console.log(this.isNavigationDrawerOpen)
         },
         setNavigationDrawerState(state:boolean) {
             this.navigationDrawerRail = state
@@ -107,8 +110,12 @@ export const useGlobalStore = defineStore("GlobalStore", {
         },
         addNavigationEndPoint(navigationEndPointsLoaded: NavigationEndPoints) {
             this.navigationEndPointsLoaded = {...this.navigationEndPointsLoaded, ...navigationEndPointsLoaded}
-        }
+        },
 
-        
+        registerLink(link:string) {
+            if(!this.registeredLinks.includes(link)) {
+                this.registeredLinks.push(link)
+            }
+        }
     }
 })

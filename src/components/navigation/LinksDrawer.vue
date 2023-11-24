@@ -96,7 +96,7 @@ const closeMergeDataDialog = () => {
     isMergeDataDialogOpen.value = false
 }
 const setNavigationDrawerState = (event:any, rail:boolean) => {    
-    console.log(rail)
+    // console.log(rail)
     globalStore.setLinksDrawerRail(rail)
 }
 </script>

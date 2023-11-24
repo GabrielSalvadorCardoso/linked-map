@@ -1,4 +1,5 @@
-import type HyperResourceOperationParameter from "./HyperResourceOperationParameter";
+import HyperResourceOperationParameter from "./HyperResourceOperationParameter";
+import HyperResourceUtils from "./HyperResourceUtils";
 
 class HyperResourceSupportedOperation {
     public _type: string;
@@ -26,26 +27,135 @@ class HyperResourceSupportedOperation {
         this._possibleStatus = possibleStatus;
         this._parameters = parameters;
     }
+
+    public static build(rawSupOp:any):HyperResourceSupportedOperation {
+
+        return new HyperResourceSupportedOperation(
+            rawSupOp[HyperResourceUtils.JSONLD_ATYPE_KEYWORD],
+            rawSupOp[HyperResourceUtils.HYDRA_METHOD_KEYWORD],
+            rawSupOp[HyperResourceUtils.HYPER_RESOURCE_APPEND_PATH_KEYWORD],
+            rawSupOp[HyperResourceUtils.HYDRA_POSSIBLE_STATUS_HEADER_KEYWORD],            
+            rawSupOp[HyperResourceUtils.HYPER_RESOURCE_PARAMETERS_KEYWORD].map((rawOpParams:any) => HyperResourceOperationParameter.build(rawOpParams))
+        )
+    }
 }
 export default HyperResourceSupportedOperation;
 
-// {
-//     "hydra:returnsHeader": [
-//         {
-//             "hydra:headerName": "Content-Type",
-//             "hydra:possibleValue": [
-//                 "application/geo+json",
-//                 "image/png"
-//             ]
-//         }
-//     ],
-//     "hydra:expectsHeader": [
-//         {
-//             "hydra:headerName": "Content-Type",
-//             "hydra:possibleValue": [
-//                 "application/geo+json",
-//                 "image/png"
-//             ]
-//         }
-//     ]
-// }
+/*
+    "hr:supportedOperations": [
+        {
+            "@type": "hr:Operation",
+            "hydra:method": "GET",
+            "hr:appendPath": "/within/{param0}",
+            "hr:parameters": [
+                {
+                    "@type": "hr:OperationParameter",
+                    "hr:variable": "param0",
+                    "hr:requiredParameter": true,
+                    "hydra:expects": "geojson:Geometry",
+                    "hr:expectsSerialization": [
+                        "text/plain",
+                        "application/geo+json"
+                    ]
+                }
+            ],
+            "hydra:returnsHeader": [
+                {
+                    "hydra:headerName": "Content-Type",
+                    "hydra:possibleValue": [
+                        "application/geo+json",
+                        "image/png"
+                    ]
+                }
+            ],
+            "hydra:expectsHeader": [
+                {
+                    "hydra:headerName": "Content-Type",
+                    "hydra:possibleValue": [
+                        "application/geo+json",
+                        "image/png"
+                    ]
+                }
+            ],
+            "hydra:possibleStatus": [
+                200
+            ]
+        },
+        {
+            "@type": "hr:Operation",
+            "hydra:method": "GET",
+            "hr:appendPath": "/contains/{param0}",
+            "hr:parameters": [
+                {
+                    "@type": "hr:OperationParameter",
+                    "hr:variable": "param0",
+                    "hr:requiredParameter": true,
+                    "hydra:expects": "geojson:Geometry",
+                    "hr:expectsSerialization": [
+                        "text/plain",
+                        "application/geo+json"
+                    ]
+                }
+            ],
+            "hydra:returnsHeader": [
+                {
+                    "hydra:headerName": "Content-Type",
+                    "hydra:possibleValue": [
+                        "application/geo+json",
+                        "image/png"
+                    ]
+                }
+            ],
+            "hydra:expectsHeader": [
+                {
+                    "hydra:headerName": "Content-Type",
+                    "hydra:possibleValue": [
+                        "application/geo+json",
+                        "image/png"
+                    ]
+                }
+            ],
+            "hydra:possibleStatus": [
+                200
+            ]
+        },
+        {
+            "@type": "hr:Operation",
+            "hydra:method": "GET",
+            "hr:appendPath": "/contained/{param0}",
+            "hr:parameters": [
+                {
+                    "@type": "hr:OperationParameter",
+                    "hr:variable": "param0",
+                    "hr:requiredParameter": true,
+                    "hydra:expects": "geojson:Geometry",
+                    "hr:expectsSerialization": [
+                        "text/plain",
+                        "application/geo+json"
+                    ]
+                }
+            ],
+            "hydra:returnsHeader": [
+                {
+                    "hydra:headerName": "Content-Type",
+                    "hydra:possibleValue": [
+                        "application/geo+json",
+                        "image/png"
+                    ]
+                }
+            ],
+            "hydra:expectsHeader": [
+                {
+                    "hydra:headerName": "Content-Type",
+                    "hydra:possibleValue": [
+                        "application/geo+json",
+                        "image/png"
+                    ]
+                }
+            ],
+            "hydra:possibleStatus": [
+                200
+            ]
+        }
+    ],
+*/

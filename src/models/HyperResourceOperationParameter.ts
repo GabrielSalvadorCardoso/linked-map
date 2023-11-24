@@ -1,3 +1,5 @@
+import HyperResourceUtils from "./HyperResourceUtils";
+
 class HyperResourceOperationParameter {
     public _type: string;
     public _variable: string;
@@ -27,6 +29,23 @@ class HyperResourceOperationParameter {
         this._expects = expects;
         this._expectsSerialization = expectsSerialization;
         
+    }
+
+    public static build(rawOpParams:any):HyperResourceOperationParameter {
+
+        return new HyperResourceOperationParameter(
+            rawOpParams[HyperResourceUtils.JSONLD_ATYPE_KEYWORD],
+            rawOpParams[HyperResourceUtils.HYPER_RESOURCE_VARIABLE_KEYWORD],
+            rawOpParams[HyperResourceUtils.HYPER_RESOURCE_REQUIRED_PARAMETER_KEYWORD],
+            rawOpParams[HyperResourceUtils.HYDRA_EXPECTS_KEYWORD],            
+            rawOpParams[HyperResourceUtils.HYPER_RESOURCE_EXPECTS_SERIALIZATION_KEYWORD]
+        )
+        /*
+    
+
+    public static  = `${HyperResourceUtils.HYDRA_PREFIX}:parameters`
+    public static HYDRA_RETURNS_HEADER_KEYWORD = `${HyperResourceUtils.HYDRA_PREFIX}:returnsHeader`
+        */
     }
 }
 export default HyperResourceOperationParameter;

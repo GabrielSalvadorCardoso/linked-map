@@ -20,8 +20,8 @@ const setNavigationDrawerState = (event:any, rail:boolean) => {
   
                 <v-list density="compact" nav>
                     <v-list-item prepend-icon="mdi-api" title="API Navigation" value="users" @click="globalStore.setActiveTab('API Navigation')"></v-list-item>
-                    <v-list-item prepend-icon="mdi-google-maps" title="Home" value="home" @click="globalStore.setActiveTab('Main Map')"></v-list-item>
                     <v-list-item prepend-icon="mdi-source-merge" title="Link Sources" value="account" @click="globalStore.setActiveTab('Link Sources')"></v-list-item>
+                    <v-list-item prepend-icon="mdi-google-maps" title="Main Map" value="home" @click="globalStore.setActiveTab('Main Map')"></v-list-item>
                     
                 </v-list>
             </v-navigation-drawer>

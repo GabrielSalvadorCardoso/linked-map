@@ -19,13 +19,13 @@ const globalStore = useGlobalStore()
         <api-navigation></api-navigation>
     </main>
 
+    <main v-if="globalStore.activeTab==='Link Sources'">
+        <LinkSources />
+    </main>
+
     <main v-if="globalStore.activeTab==='Main Map'">
         <TemplateMap />
         <LinksDrawer />
-    </main>
-
-    <main v-if="globalStore.activeTab==='Link Sources'">
-        <LinkSources />
     </main>
 </template>
 

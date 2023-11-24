@@ -1,12 +1,36 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 // @ts-ignore
-import EntryPointExpansionPanel from '../utils/EntryPointExpansionPanel.vue'
+import EntryPointExpansionPanels from '../utils/EntryPointExpansionPanels.vue'
 
 const url = ref("")
 
 import { useGlobalStore, type NavigationEntryPoints } from "@/stores/GlobalStore";
+import LinkTerm from '@/models/LinkTerm';
+import HyperResourceUtils from '@/models/HyperResourceUtils';
 const globalStore = useGlobalStore()
+
+const isLinkTerm = (valObject:any) => {
+    return (
+        typeof valObject === 'object' &&
+        Object.keys(valObject).includes(HyperResourceUtils.JSONLD_AID_KEYWORD) &&
+        Object.keys(valObject).includes(HyperResourceUtils.JSONLD_ATYPE_KEYWORD) &&
+        valObject[HyperResourceUtils.JSONLD_ATYPE_KEYWORD] === HyperResourceUtils.JSONLD_AID_KEYWORD
+    )
+}
+
+const formatEntryPointMetadata = (source:string, rawContext:any):LinkTerm[] => {
+    let _endpoints:LinkTerm[] = []
+    for(let i=0; i<Object.entries(rawContext[HyperResourceUtils.JSONLD_ACONTEXT_KEYWORD]).length; i++) {
+        let term:string = Object.entries(rawContext[HyperResourceUtils.JSONLD_ACONTEXT_KEYWORD])[i][0] as unknown as string
+        let valObject:any = Object.entries(rawContext[HyperResourceUtils.JSONLD_ACONTEXT_KEYWORD])[i][1]
+        if(isLinkTerm(valObject)) {
+            let id = valObject[HyperResourceUtils.JSONLD_AID_KEYWORD]
+            _endpoints.push(new LinkTerm(source, term, id))
+        }
+    }
+    return _endpoints
+}
 
 const requestEntryPointMetadata = async () => {
     
@@ -15,9 +39,9 @@ const requestEntryPointMetadata = async () => {
     })
     
     let json = await resp.json()
-    
+    let serilized = formatEntryPointMetadata(url.value, json)
     let obj:NavigationEntryPoints = {}
-    obj[url.value] = json
+    obj[url.value] = serilized
     globalStore.addNavigationEntryPoint(obj)
 }
 </script>
@@ -28,9 +52,7 @@ const requestEntryPointMetadata = async () => {
         <p> http://localhost:8001 </p>
         <v-text-field class="url-input" persistent-placeholder clearable label="Resource URL" v-model="url" variant="outlined"></v-text-field>
         <v-btn class="execute-btn" v-on:click="($event:any) => requestEntryPointMetadata()" variant="outlined">Add</v-btn>
-        <div v-for="navEntryPoint in Object.entries(globalStore.navigationEntryPointsLoaded)" :key="navEntryPoint[0]">
-            <entry-point-expansion-panel :title="navEntryPoint[0]" :context="navEntryPoint[1]"></entry-point-expansion-panel>
-        </div>
+        <entry-point-expansion-panels />
     </div>
 </template>
 

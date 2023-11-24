@@ -73,7 +73,7 @@ export default {
             return json
         },
         async fetchEntryPoint () {
-            console.log(this.entryPoint.url)
+            // console.log(this.entryPoint.url)
             const resp = await fetch(this.entryPoint.url)
             const json = await resp.json()
             return json
@@ -254,11 +254,14 @@ export default {
         <v-card class="form">
             <v-card-title class="text-subtitle-1">Sugestions of Resource URLs</v-card-title>
             <v-card-text>
-                http://bcim.geoapi <br />
+                <!-- http://bcim.geoapi <br />
                 http://localhost:8001 <br />
                 http://bcim.geoapi/lim-unidade-federacao-a-list <br />
                 http://bcim.geoapi/lim-municipio-a-list <br />
-                http://localhost:8001/taxas-rendimento-escolar-por-municipio-list
+                http://localhost:8001/taxas-rendimento-escolar-por-municipio-list -->
+                <ul v-for="link in globalStore.registeredLinks" :key="link">
+                    <li>{{ link }}</li>
+                </ul>
             </v-card-text>
 
             <v-text-field class="url-input" persistent-placeholder clearable label="Resource URL" v-model="entryPoint.url" variant="outlined"></v-text-field>
