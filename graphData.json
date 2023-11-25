@@ -1,0 +1,16 @@
+{
+    "X": {
+      "term": "geocodigo",
+      "semantic": "http://www.semanticweb.org/adriana/ontologies/2023/6/untitled-ontology-56#geocodigo",
+      "source": "http://bcim.geoapi/lim-municipio-a-list",
+      "matchsWith": [
+        8
+      ]
+    },
+  
+    "8": {
+    "term": "codigo_municipio",
+    "semantic": "http://www.semanticweb.org/adriana/ontologies/2023/6/untitled-ontology-56#geocodigo",
+    "source": "http://localhost:8001/taxas-rendimento-escolar-por-municipio-list"
+  }
+}

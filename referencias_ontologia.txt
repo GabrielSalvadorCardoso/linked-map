@@ -1,0 +1,16 @@
+
+Ontology URL: http://www.semanticweb.org/adriana/ontologies/2023/6/untitled-ontology-56
+"@id": "http://www.semanticweb.org/adriana/ontologies/2023/6/untitled-ontology-56#geocodigo"
+"@id": "http://www.semanticweb.org/adriana/ontologies/2023/6/untitled-ontology-56#EDGV_LML_municipio"
+
+LOG de alterações
+untitled-ontology-56 -> et-edgv-ontology
+adriana/ -> 
+
+http://www.semanticweb.org/adriana/ontologies/2023/6/untitled-ontology-56 -> http://www.semanticweb.org/ontologies/2023/6/et-edgv-ontology
+
+
+
+Sugestions of Resource URLs
+http://bcim.geoapi/lim-municipio-a-list
+http://localhost:8001/taxas-rendimento-escolar-por-municipio-list

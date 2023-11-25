@@ -109,7 +109,8 @@ const setLinkSourcesSelection = (event:any, item:TableItem) => {
             <LinkSourcesConfirmationTable   :isLinkSourceDialogOpen="isLinkSourceDialogOpen"
                                             v-on:closeLinkSourceDialog="closeLinkSourceDialog"
                                             v-on:confirmLinkedSources="confirmLinkedSources"
-                                            :selectedTableItems="selectedTableItems" />
+                                            :selectedTableItems="selectedTableItems"
+                                            :contextTableItems="contextTableItems" />
         </v-table>
         <v-btn class="link-sources-btn" v-if="Object.keys(contexts).length > 1" v-on:click="($event:any) => openLinkSourceDialog()" variant="outlined">
             Link Sources
