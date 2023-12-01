@@ -29,10 +29,6 @@ const zoom = ref(4)
             
         </LMap>
     </div>
-    <!-- <div class="teste">{{contentMarginLeft}}</div> -->
-    <!-- <div class="teste">{{isNavigationDrawerOpen}}</div> -->
-    
-    <!-- <button v-on:click="requestData()">Request Data</button> -->
 </template>
 <style>
 /* .teste {

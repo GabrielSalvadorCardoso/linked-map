@@ -78,8 +78,6 @@ const mergeData = async (sourcesLink:LinkinItem[]) => {
 }
 const fetchData = async (url:string) => {
     const resp = await fetch(url)
-    // console.log(resp)
-    // const json = await resp.json()
     return resp
 }
 const fetchMetadata = async (url:string) => {
@@ -95,23 +93,19 @@ const openMergeDataDialog = () => {
 const closeMergeDataDialog = () => {
     isMergeDataDialogOpen.value = false
 }
-const setNavigationDrawerState = (event:any, rail:boolean) => {    
-    // console.log(rail)
+const setLinksDrawerRail = (event:any, rail:boolean) => {
     globalStore.setLinksDrawerRail(rail)
 }
 </script>
 <template>
     <v-card>
         <v-layout>
-            <!-- @ts-ignore -->
-            <v-navigation-drawer location="right" v-bind="globalStore.isLinksDrawerOpen" :rail="globalStore.linksDrawerRail" permanent @click="($event:any, rail:boolean) => setNavigationDrawerState($event, false)">
-                <v-list-item class="header-item" :title="getActiveTabName()" nav>
+            <v-navigation-drawer location="right" v-bind="globalStore.isLinksDrawerOpen" :rail="globalStore.linksDrawerRail" permanent @click="($event:any, rail:boolean) => setLinksDrawerRail($event, false)">
+                <v-list-item  prepend-avatar="https://json-ld.org/images/json-ld-data-24.png" :title="getActiveTabName()" nav>
                     <template v-slot:append>
-                        <v-btn variant="text" icon="mdi-chevron-left" @click.stop="($event:any, rail:boolean) => setNavigationDrawerState($event, !globalStore.linksDrawerRail)"></v-btn>
+                        <v-btn variant="text" icon="mdi-chevron-right" @click.stop="($event:any, rail:boolean) => setLinksDrawerRail($event, !rail)"></v-btn>
                     </template>
                 </v-list-item>
-  
-                <!-- <pre>{{ globalStore.sourcesLinks }}</pre> -->
                 <v-divider></v-divider>
   
                 <v-list density="compact">

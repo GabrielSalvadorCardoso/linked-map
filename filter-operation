@@ -1,0 +1,25 @@
+Reference: https://www.w3schools.com/sql/sql_where.asp
+Basic filter operation request
+http://<server-address>/<api-entrypoint>/<collection-name>/filter/<attribute>/<operator>/<attr-value>
+
+<attribute>
+property available in each of collection items
+
+<operator>
+<!--
+https://schema.org/QualitativeValue
+https://schema.org/QuantitativeValue
+-->
+
+= 	        Equal 	                                                                        https://schema.org/equal
+> 	        Greater than 	                                                                https://schema.org/greater
+< 	        Less than 	                                                                    https://schema.org/lesser
+>= 	        Greater than or equal 	                                                        https://schema.org/greaterOrEqual
+<= 	        Less than or equal 	                                                            https://schema.org/lesserOrEqual
+<> 	        Not equal. Note: In some versions of SQL this operator may be written as !=     https://schema.org/nonEqual 	
+BETWEEN 	Between a certain range 	
+LIKE 	    Search for a pattern 	
+IN 	        To specify multiple possible values for a column
+
+<attr-value>
+value compatible with the selected <attribute> type

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // @ts-ignore
-import MainHeader from './components/workspace/MainHeader.vue';
+import MainHeader from './components/toolbars/MainHeader.vue';
+import MainMapToolbar from './components/toolbars/MainMapToolbar.vue';
 import LinkSources from './components/workspace/LinkSources.vue';
 import ApiNavigation from './components/workspace/ApiNavigation.vue';
 // @ts-ignore
@@ -12,7 +13,14 @@ const globalStore = useGlobalStore()
 </script>
 
 <template>
-    <MainHeader />
+    
+    <main-header v-if="globalStore.activeTab!=='Main Map'" />
+    <main-map-toolbar v-if="globalStore.activeTab==='Main Map'" />
+
+    <main v-if="globalStore.activeTab==='Main Map'">
+        <TemplateMap />
+        <LinksDrawer />
+    </main>
 
     <NavigationDrawer /> 
     <main v-if="globalStore.activeTab==='API Navigation'">
@@ -23,10 +31,7 @@ const globalStore = useGlobalStore()
         <LinkSources />
     </main>
 
-    <main v-if="globalStore.activeTab==='Main Map'">
-        <TemplateMap />
-        <LinksDrawer />
-    </main>
+    
 </template>
 
 <style scoped>

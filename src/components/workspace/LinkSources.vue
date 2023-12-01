@@ -252,32 +252,54 @@ export default {
 <template>
     <div class="container">
         <v-card class="form">
-            <v-card-title class="text-subtitle-1">Sugestions of Resource URLs</v-card-title>
+            <v-card-title class="text-subtitle-1">Registered links</v-card-title>
             <v-card-text>
-                <!-- http://bcim.geoapi <br />
-                http://localhost:8001 <br />
-                http://bcim.geoapi/lim-unidade-federacao-a-list <br />
-                http://bcim.geoapi/lim-municipio-a-list <br />
-                http://localhost:8001/taxas-rendimento-escolar-por-municipio-list -->
-                <ul v-for="link in globalStore.registeredLinks" :key="link">
-                    <li>{{ link }}</li>
-                </ul>
+                <v-list lines="one" density="compact">
+                    <v-list-item density="compact" v-for="link in globalStore.registeredLinks" :key="link">                    
+                        <v-checkbox density="compact" :label="link"/>
+                    </v-list-item>
+                </v-list>
             </v-card-text>
 
-            <v-text-field class="url-input" persistent-placeholder clearable label="Resource URL" v-model="entryPoint.url" variant="outlined"></v-text-field>
-            <!-- <v-btn class="execute-btn" v-on:click="$event => requestEntryPoint()" variant="outlined">Add</v-btn> -->
-            <v-btn class="execute-btn" v-on:click="($event:any) => addCurrentURL()" variant="outlined">Add</v-btn>
+            <v-card-item>
+                <!-- <div>
+                <div class="text-overline mb-1">
+                    {{ variant }}
+                </div>
+                <div class="text-h6 mb-1">
+                    Headline
+                </div>
+                <div class="text-caption">Greyhound divisely hello coldly fonwderfully</div>
+                </div> -->
+                <v-text-field class="url-input" persistent-placeholder clearable label="Resource URL" v-model="entryPoint.url" variant="outlined"></v-text-field>
+            </v-card-item>
 
+            
+            
+            <v-card-actions>
+                <v-btn class="execute-btn" v-on:click="($event:any) => addCurrentURL()" variant="outlined">Add</v-btn>
+            </v-card-actions>
+        </v-card>
+
+        <div class="mt-4"></div>
+
+        <v-card class="form">
+            <v-card-title class="text-subtitle-1">Context loaded URLs</v-card-title>
             <v-list lines="one">
-                <v-card-title class="text-subtitle-1">Registered URLs</v-card-title>
                 <v-list-item v-for="url in urls" :key="url">
                     <div class="item-content">
                         <v-list-item-title class="item-title">{{ url }}</v-list-item-title>
                         <v-btn v-on:click="($event:any) => fetchOptionsToURL(url.trim())">OPTIONS</v-btn>
                     </div>
                 </v-list-item>
+            </v-list>
+        </v-card>
 
+        <div class="mt-4"></div>
+
+        <v-card class="form">
                 <v-card-title class="text-subtitle-1">Loaded Contexts</v-card-title>
+            <v-list lines="one">
                 <v-list-item v-for="requestedUrl in requestedUrls" :key="requestedUrl">
                     <div class="item-content">
                         <v-list-item-title class="item-title">{{ requestedUrl }}</v-list-item-title>
@@ -307,6 +329,9 @@ export default {
 </template>
 
 <style scoped>
+.litem {
+    border: solid #000 2px;
+}
 .container {
     /* margin: 10px 255px; */
     margin-left: v-bind('globalStore.mainContentMarginLeft');

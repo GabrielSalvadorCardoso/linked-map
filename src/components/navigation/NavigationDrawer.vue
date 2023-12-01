@@ -9,8 +9,8 @@ const setNavigationDrawerState = (event:any, rail:boolean) => {
 <template>
     <v-card >
         <v-layout>
-            <v-navigation-drawer id="drawerCard" v-bind="globalStore.isNavigationDrawerOpen" :rail="globalStore.navigationDrawerRail" permanent @click="($event:any, rail:boolean) => setNavigationDrawerState($event, false)">
-                <v-list-item class="header-item" prepend-avatar="https://json-ld.org/images/json-ld-data-24.png" :title="globalStore.activeTab" nav>
+            <v-navigation-drawer location="left" v-bind="globalStore.isNavigationDrawerOpen" :rail="globalStore.navigationDrawerRail" permanent @click="($event:any, rail:boolean) => setNavigationDrawerState($event, false)">
+                <v-list-item prepend-avatar="https://json-ld.org/images/json-ld-data-24.png" :title="globalStore.activeTab" nav>
                     <template v-slot:append>
                         <v-btn variant="text" icon="mdi-chevron-left" @click.stop="($event:any, rail:boolean) => setNavigationDrawerState($event, !rail)"></v-btn>
                     </template>
@@ -29,8 +29,4 @@ const setNavigationDrawerState = (event:any, rail:boolean) => {
     </v-card>
 </template>
 <style>
-.header-item {
-    height: 64px;
-    margin: auto;
-}
 </style>

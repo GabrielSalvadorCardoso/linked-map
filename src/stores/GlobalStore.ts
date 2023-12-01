@@ -2,7 +2,7 @@ import type HyperResourceContext from "@/models/HyperResourceContext";
 import type LinkTerm from "@/models/LinkTerm";
 import { defineStore } from "pinia";
 const NAV_DRAWER_OPEN_WIDTH = '256px'
-const NAV_DRAWER_CLOSE_WIDTH = '56px'
+export const NAV_DRAWER_CLOSE_WIDTH = '56px'
 // const SOURCES_LINK = {
 //     "http://127.0.0.1:8001/taxas-rendimento-escolar-por-municipio-list/filter/codigo_municipio/eq/3304557 + http://bcim.geoapi/lim-municipio-a-list/filter/geocodigo/eq/3304557": [
 //         {
@@ -58,12 +58,12 @@ export interface GlobalStoreState {
 export const useGlobalStore = defineStore("GlobalStore", {
     state: ():GlobalStoreState => {
         return {
-            activeTab: "API Navigation",//"Main Map",
+            activeTab: "Main Map",
             sourcesLinks: {},
             currentLayer: null,
             isNavigationDrawerOpen: false,
-            navigationDrawerRail: true,
             isLinksDrawerOpen: false,
+            navigationDrawerRail: true,            
             linksDrawerRail: true,
             mainContentMarginLeft: '56px',//mainContentMarginLeft: 256,
             mainContentMarginRight: '56px',//mainContentMarginRight: 256,
@@ -84,10 +84,10 @@ export const useGlobalStore = defineStore("GlobalStore", {
         setCurrentLayer(layer:any) {
             this.currentLayer = layer
         },
-        toggleNavigationDrawer() {
-            this.isNavigationDrawerOpen = !this.isNavigationDrawerOpen;
-            // console.log(this.isNavigationDrawerOpen)
-        },
+        // toggleNavigationDrawer() {
+        //     this.isNavigationDrawerOpen = !this.isNavigationDrawerOpen;
+        //     // console.log(this.isNavigationDrawerOpen)
+        // },
         setNavigationDrawerState(state:boolean) {
             this.navigationDrawerRail = state
             if(this.navigationDrawerRail) {

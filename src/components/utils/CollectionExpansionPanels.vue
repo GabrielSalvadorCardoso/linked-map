@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import HyperResourceSupportedPropertiesTable from '../tables/HyperResourceSupportedPropertiesTable.vue';
 import HyperResourceSupportedOperationsTable from '../tables/HyperResourceSupportedOperationsTable.vue';
 import { useGlobalStore, type NavigationEndPoints } from '@/stores/GlobalStore';
