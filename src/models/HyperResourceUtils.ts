@@ -15,6 +15,7 @@ class HyperResourceUtils {
     public static HYPER_RESOURCE_PARAMETERS_KEYWORD = `${HyperResourceUtils.HYPER_RESOURCE_PREFIX}:parameters`
 
     public static HYPER_RESOURCE_OPERATION_KEYWORD = `${HyperResourceUtils.HYPER_RESOURCE_PREFIX}:Operation`
+    public static HYPER_RESOURCE_SUPPORTED_PROPERTY_KEYWORD = `${HyperResourceUtils.HYPER_RESOURCE_PREFIX}:SupportedProperty`
     public static HYPER_RESOURCE_APPEND_PATH_KEYWORD = `${HyperResourceUtils.HYPER_RESOURCE_PREFIX}:appendPath`    
 
     public static HYDRA_PROPERTY_KEYWORD = `${HyperResourceUtils.HYDRA_PREFIX}:property`
