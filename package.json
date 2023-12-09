@@ -20,6 +20,7 @@
     "pinia": "^2.1.7",
     "v-network-graph": "^0.9.13",
     "vue": "^3.3.4",
+    "vue-flag-icon": "^2.1.0",
     "vuetify": "^3.3.23"
   },
   "devDependencies": {

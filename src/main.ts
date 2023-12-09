@@ -11,6 +11,8 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import VNetworkGraph from "v-network-graph"
+// @ts-ignore
+import FlagIcon from 'vue-flag-icon'
 import "v-network-graph/lib/style.css"
 const pinia = createPinia()
 
@@ -22,4 +24,4 @@ const vuetify = createVuetify({
   directives,
 })
 
-createApp(App).use(pinia).use(vuetify).use(VNetworkGraph).mount('#app')
+createApp(App).use(pinia).use(vuetify).use(FlagIcon).use(VNetworkGraph).mount('#app')

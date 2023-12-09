@@ -66,13 +66,13 @@ const generateNodesAndEdges = (_selectedTableItems:TableItem[], _contextItems: T
     let _edges:any = {}
     for(let i=0; i<_selectedTableItems.length; i++) {
         let node:Node = {name: _selectedTableItems[i].source}
-        let nodeId = `node${i}`
+        let nodeId = `node-${_selectedTableItems[i].source}`
         _nodes[nodeId] = node
 
         if(_selectedTableItems[i].matchsWith.length>0) {
             for(let k=0; k<_selectedTableItems[i].matchsWith.length; k++) {
                 let linkedNode:Node = {name: _contextItems[_selectedTableItems[i].matchsWith[k]].source}
-                let linkedNodeId = `node${i+1}`
+                let linkedNodeId = `node-${_contextItems[_selectedTableItems[i].matchsWith[k]].source}`
                 _nodes[linkedNodeId] = linkedNode
                 
                 // create edge between linked nodes
@@ -236,10 +236,10 @@ const configs = reactive(initialConfigs)
                     </v-toolbar-items>
                 </v-toolbar>
                 <v-card-text>
-                    {{ selectedTableItems }}
-                    <br/>
-                    <br/>
-                    {{ nodesAndEdges }}
+                    <!-- {{ selectedTableItems }} -->
+                    <!-- <br/> -->
+                    <!-- <br/> -->
+                    <!-- {{ nodesAndEdges }} -->
                     <!-- <br/>
                     <br/>
                     {{ edges }} -->

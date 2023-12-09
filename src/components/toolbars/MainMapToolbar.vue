@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useGlobalStore } from "@/stores/GlobalStore";
 import AddInformationLayersDialog from "../dialogs/AddInformationLayersDialog.vue";
+import Internationalization from "../../utils/Internationalization";
 import { ref } from "vue";
 const globalStore = useGlobalStore();
 const isAddInformationLayerDialogOpen = ref(false)
@@ -11,6 +12,19 @@ const openAddInformationLayerDialog = () => {
 const closeAddInformationLayerDialog = () => {
     isAddInformationLayerDialogOpen.value = false
 }
+
+const selectIdiom = (isoCode:string) => {
+    globalStore.setIdiom(isoCode)
+}
+
+const idioms = ref([
+    {
+        isoCode: "pt"
+    },
+    {
+        isoCode: "us"
+    }
+])
 </script>
 <template>
     
@@ -19,8 +33,21 @@ const closeAddInformationLayerDialog = () => {
             
             <v-toolbar flat>
                 <v-spacer></v-spacer>
-                <v-btn variant="outlined" append-icon="mdi-layers-plus" @click="openAddInformationLayerDialog()">Add Information Layer</v-btn>
+                <v-btn variant="outlined" append-icon="mdi-layers-plus" @click="openAddInformationLayerDialog()">
+                    {{ Internationalization.getLocaleString("addInformationLayer", globalStore.idiom) }}
+                </v-btn>
                 <v-spacer></v-spacer>
+                <v-menu>
+                    <template v-slot:activator="{ props }">
+                        <v-btn icon="mdi-translate" v-bind="props" ></v-btn>
+                    </template>
+                    <v-list>
+                        <v-list-item    v-for="(item, index) in idioms" :key="index" :value="index"
+                                        @click="selectIdiom(item.isoCode)">
+                            <flag :iso="item.isoCode" />
+                        </v-list-item>
+                    </v-list>
+                </v-menu>                
             </v-toolbar>
 
             <v-divider></v-divider>

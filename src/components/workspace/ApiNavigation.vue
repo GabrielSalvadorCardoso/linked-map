@@ -49,7 +49,8 @@ const requestEntryPointMetadata = async () => {
 <template>
     <div class="container">
         <p> http://bcim.geoapi </p>
-        <p> http://localhost:8001 </p>
+        <p> http://inep.api </p>
+        <p> http://anatel.api </p>
         <v-text-field class="url-input" persistent-placeholder clearable label="Resource URL" v-model="url" variant="outlined"></v-text-field>
         <v-btn class="execute-btn" v-on:click="($event:any) => requestEntryPointMetadata()" variant="outlined">Add</v-btn>
         <entry-point-expansion-panels />

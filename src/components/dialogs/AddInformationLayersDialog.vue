@@ -4,6 +4,12 @@ import HyperResourceContext from "../../models/HyperResourceContext"
 import HyperResourceSupportedProperty from "../../models/HyperResourceSupportedProperty"
 import type HyperResourceSupportedOperation from '@/models/HyperResourceSupportedOperation';
 import HyperResourceUtils from '@/models/HyperResourceUtils';
+import { useGlobalStore } from "@/stores/GlobalStore";
+import { LMap, LTileLayer, LGeoJson } from "@vue-leaflet/vue-leaflet";
+const globalStore = useGlobalStore();
+const CONTENT_TYPE_GEOJSON = "application/geo+json"
+// @ts-ignore
+import Internationalization from "../../utils/Internationalization";
 interface AddInformationLayersDialogProps {
     isAddInformationLayerDialogOpen: boolean
 }
@@ -29,9 +35,14 @@ const operationParamToFillIdx = ref<number|null>(null)
 const loaded = ref(false)
 const loading = ref(false)
 const loadedContext = ref<HyperResourceContext>() //HyperResourceContext
+const visualizedContext = ref<HyperResourceContext>()
 const buildedURL = ref("")
 const currentValue = ref()
 const currentURL = ref("http://bcim.geoapi/lim-unidade-federacao-a-list")
+
+const visualizedData = ref()
+const visualizedDataIsGeo = ref<boolean>(false)
+
 // https://ej2.syncfusion.com/vue/documentation/dialog/how-to/add-a-minimize-maximize-buttons
 const operators= ref<Operator[]>([
     // {
@@ -289,12 +300,19 @@ const previewResult = async () => {
 
     })
     try {
-        let resp = await fetch(buildedURL.value, {
-            method: 'OPTIONS'
-        })
+        let resp = await fetch(buildedURL.value)//, {
+        //     method: 'OPTIONS'
+        // })
         let json = await resp.json()
-    
-        console.log(json)
+        // visualizedContext.value = HyperResourceContext.build(currentURL.value, json)
+        visualizedData.value = json
+        if(resp.headers.get("content-type") === CONTENT_TYPE_GEOJSON) {
+            visualizedDataIsGeo.value = true
+        } else {
+            visualizedDataIsGeo.value = false
+        }
+        
+                
     } catch(error) {
         console.log("Unable to access given URL")
     } finally {
@@ -303,13 +321,23 @@ const previewResult = async () => {
     } 
 }
 
+const showDataVisualizer = () => {
+    return visualizedData.value !== undefined
+}
+
+const getGeoData = () => {
+    
+    return visualizedData.value["features"][0]
+    
+}
+
 </script>
 <template>
 <template>
     <v-row justify="center">
-        <v-dialog persistent transition="dialog-top-transition" scrim v-model="isDialogOpen">
+        <v-dialog persistent scrollable transition="dialog-top-transition" scrim v-model="isDialogOpen">
             <v-card>
-                <v-toolbar color="#3F51B5" title="Insert and explore a URLs"></v-toolbar>
+                <v-toolbar color="#3F51B5" :title="Internationalization.getLocaleString('addInformationLayerDialogTitle', globalStore.idiom)"></v-toolbar>
                 <v-card-text>
                     <v-container>
                         <v-row class="ma-5">
@@ -332,15 +360,24 @@ const previewResult = async () => {
 
                         <v-row class="ma-3" v-if="showOperationsInput()">
                             <v-col cols="12">
-                                <v-card title="Supported Operations" variant="outlined" v-if="showOperationsInput()">
+                                <v-card :title="Internationalization.getLocaleString('supportedOperationsTableTitle', globalStore.idiom)" variant="outlined" v-if="showOperationsInput()">
                                     <v-radio-group :disabled="operationConfirmed" v-model="selectedOperation">
                                         <v-table fixed-header density="compact" height="200px">
                                             <thead>
                                                 <tr>
                                                     <th class="text-left">{{ (loadedContext as HyperResourceContext)._supportedOperations[0]._type }}</th>                                                        
-                                                    <th class="text-left">Method</th>
-                                                    <th class="text-left">Append Path</th>                                                        
-                                                    <th class="text-left">Possible status</th>
+                                                    <th class="text-left">
+                                                        {{ Internationalization.getLocaleString("supportedOperationsTableMethod", globalStore.idiom) }}
+                                                        
+                                                    </th>
+                                                    <th class="text-left">
+                                                        {{ Internationalization.getLocaleString("supportedOperationsTableAppendPath", globalStore.idiom) }}
+                                                        
+                                                    </th>                                                        
+                                                    <th class="text-left">
+                                                        {{ Internationalization.getLocaleString("supportedOperationsTablePossibleStatus", globalStore.idiom) }}
+                                                        
+                                                    </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -372,12 +409,16 @@ const previewResult = async () => {
                         </v-row>
 
                         <v-row class="ma-6 row" dense no-gutters justify="space-around" align-content="center">
-                            <!-- <v-col cols="12" sm="4" v-if="showPropertiesInput()">
-                                
-                            </v-col> -->
                             <v-col cols="5" v-if="showPropertiesInput()">
                                 <div class="selectionControls">
-                                    <v-select hide-details hint="Pick your favorite states" variant="outlined" :disabled="propertyConfirmed" label="Property" v-model="selectedProperty" required :items="(loadedContext as HyperResourceContext)._supportedProperties" :item-props="(propertyData as any)"></v-select>
+                                    <v-select   hide-details
+                                                variant="outlined"
+                                                :disabled="propertyConfirmed"
+                                                :label="Internationalization.getLocaleString('propertyLabel', globalStore.idiom)"
+                                                v-model="selectedProperty"
+                                                required
+                                                :items="(loadedContext as HyperResourceContext)._supportedProperties" :item-props="(propertyData as any)">
+                                        </v-select>
                                     <v-btn-toggle class="controls" v-model="propertyConfirmed" color="primary" >
                                         <v-btn @click="cancelCurrentProperty" :disabled="!propertyConfirmed" icon="mdi-cancel"></v-btn>
                                         <v-btn @click="confirmCurrentProperty" :disabled="propertyConfirmed || selectedProperty === undefined" icon="mdi-check"></v-btn>
@@ -385,13 +426,17 @@ const previewResult = async () => {
                                 </div>
                             </v-col>
                             
-                            
-                            <!-- <v-col cols="12" sm="4" v-if="showOperatorsInput()">
-                                <v-select variant="outlined" v-if="showOperatorsInput()" :disabled="operatorConfirmed" label="Operator" v-model="selectedOperator" required :items="operators" :item-props="operatorProps"></v-select>
-                            </v-col> -->
                             <v-col cols="5" v-if="showOperatorsInput()">
                                 <div class="selectionControls">
-                                    <v-select variant="outlined" v-if="showOperatorsInput()" :disabled="operatorConfirmed" label="Operator" v-model="selectedOperator" required :items="operators" :item-props="operatorProps"></v-select>
+                                    <v-select   variant="outlined"
+                                                v-if="showOperatorsInput()"
+                                                :disabled="operatorConfirmed"
+                                                :label="Internationalization.getLocaleString('operatorLabel', globalStore.idiom)"
+                                                v-model="selectedOperator"
+                                                required
+                                                :items="operators"
+                                                :item-props="operatorProps">
+                                    </v-select>
                                     <v-btn-toggle class="controls" v-model="operatorConfirmed" color="primary" v-if="showOperatorsInput()">
                                         <v-btn @click="cancelCurrentOperator" :disabled="!operatorConfirmed" icon="mdi-cancel"></v-btn>
                                         <v-btn @click="confirmCurrentOperator" :disabled="operatorConfirmed || selectedOperator === undefined" icon="mdi-check"></v-btn>
@@ -401,12 +446,13 @@ const previewResult = async () => {
                         </v-row>
 
                         <v-row class="ma-6 row" dense no-gutters justify="space-around" align-content="center">
-                            <!-- <v-col cols="10" v-if="showValueInput()">
-                                <v-text-field label="Insert a value" v-model="currentValue"></v-text-field>
-                            </v-col> -->
                             <v-col v-if="showValueInput()">
                                 <div class="selectionControls">
-                                    <v-text-field class="valueInput" label="Insert a value" v-model="currentValue"></v-text-field>
+                                    <v-text-field   class="valueInput"
+                                                    variant="underlined"
+                                                    :label="Internationalization.getLocaleString('insertValueLabel', globalStore.idiom)"
+                                                    v-model="currentValue">
+                                    </v-text-field>
                                     <v-btn-toggle v-model="valueConfirmed" color="primary" >
                                         <v-btn @click="cancelCurrentValue" :disabled="!valueConfirmed" icon="mdi-cancel"></v-btn>
                                         <v-btn @click="confirmCurrentValue" :disabled="valueConfirmed || currentValue === undefined" icon="mdi-check"></v-btn>
@@ -418,22 +464,40 @@ const previewResult = async () => {
                         <v-row class="ma-6" dense no-gutters justify="space-around" align-content="center">
                             <v-col cols="12">
                                 <div class="selectionControls">
-                                    <v-text-field class="valueInput" readonly label="Build URL by selecting options above" :model-value="buildedURL"></v-text-field>
+                                    <v-text-field   class="valueInput"
+                                                    readonly :label="Internationalization.getLocaleString('buildURLhelperText', globalStore.idiom)"
+                                                    :model-value="buildedURL">
+                                    </v-text-field>
                                 </div>
                             </v-col>
+                        </v-row>
+<!--  v-if="showDataVisualizer()" -->
+                        <v-row class="ma-6" dense no-gutters justify="space-around" align-content="center">
+                            <div class="mapPreviewContainer">
+                                <l-map ref="previewMap" :use-global-leaflet="false" :zoom="5" :center="[-15.83, -55.86]">
+                                    <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" layer-type="base" name="OpenStreetMap"> </l-tile-layer>
+                                    <l-geo-json :geojson="visualizedData"></l-geo-json>
+                                </l-map>
+                            </div>
                         </v-row>
                     </v-container>
                 </v-card-text>
         <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn variant="outlined" @click="emit('closeAddInformationLayerDialog')">Close</v-btn>
+            <v-btn variant="outlined" @click="emit('closeAddInformationLayerDialog')">
+                {{ Internationalization.getLocaleString("close", globalStore.idiom) }}
+            </v-btn>
             <v-spacer></v-spacer>
-            <v-btn variant="outlined" @click="previewResult()">Preview result</v-btn>
+            <v-btn variant="outlined" @click="previewResult()">
+                {{ Internationalization.getLocaleString('previewResult', globalStore.idiom) }}
+            </v-btn>
             <v-spacer></v-spacer>
-            <v-btn variant="outlined" @click="registerCurrentRequest()">Register request</v-btn>
+            <v-btn variant="outlined" @click="registerCurrentRequest()">
+                {{ Internationalization.getLocaleString('registerRequest', globalStore.idiom) }}
+            </v-btn>
             <v-spacer></v-spacer>
         </v-card-actions>
-      </v-card>
+            </v-card>
             
         </v-dialog>
     </v-row>
@@ -445,8 +509,8 @@ const previewResult = async () => {
     border-top: solid #CCC;
 }
 .row {
-    border: solid thin;
-    border-radius: 5px;
+    /* border-top: solid thin; */
+    /* border-radius: 5px; */
     /* margin: 10px; */
 }
 .selectionControls {
@@ -457,6 +521,11 @@ const previewResult = async () => {
     margin: 10px auto 5px auto;
 }
 .valueInput {
-    margin: 5px;
+    margin: 5px 5px 5px 10px;
+    width: 70%;
+}
+.mapPreviewContainer {
+    height: 300px;
+    width: 100%;
 }
 </style>

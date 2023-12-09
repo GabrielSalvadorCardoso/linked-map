@@ -109,11 +109,21 @@ const setLinksDrawerRail = (event:any, rail:boolean) => {
                 <v-divider></v-divider>
   
                 <v-list density="compact">
-                    <v-list-item v-for="sourcesLink in Object.keys(globalStore.sourcesLinks)" :key="sourcesLink">
+                    <!-- <v-list-item v-for="sourcesLink in Object.keys(globalStore.sourcesLinks)" :key="sourcesLink">
                         <div class="item-content">
                             <v-list-item-title class="item-title">{{ sourcesLink }}</v-list-item-title>
-                            <v-btn icon="mdi-send" @click="($event:any) => mergeData(globalStore.sourcesLinks[sourcesLink])"></v-btn>
+                            <v-btn icon="mdi-map-plus" @click="($event:any) => mergeData(globalStore.sourcesLinks[sourcesLink])"></v-btn>
                         </div>
+                    </v-list-item> -->
+                    <v-list-item    prepend-icon="mdi-map-plus"
+                                    :title="sourcesLink"
+                                    class="sourceLinkItem"
+                                    @click="($event:any) => mergeData(globalStore.sourcesLinks[sourcesLink])"
+                                    v-for="sourcesLink in Object.keys(globalStore.sourcesLinks)" :key="sourcesLink">
+                        
+                            <!-- <v-list-item-title class="item-title">{{ sourcesLink }}</v-list-item-title> -->
+                            <!-- <v-btn icon="mdi-map-plus" @click="($event:any) => mergeData(globalStore.sourcesLinks[sourcesLink])"></v-btn> -->
+                        
                     </v-list-item>
                 </v-list>
             </v-navigation-drawer>
@@ -122,6 +132,9 @@ const setLinksDrawerRail = (event:any, rail:boolean) => {
     </v-card>
 </template>
 <style>
+.sourceLinkItem {
+    cursor: pointer;
+}
 .item-content {
     display: flex;
     flex-direction: row;

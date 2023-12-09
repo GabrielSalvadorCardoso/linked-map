@@ -40,9 +40,9 @@ export default {
     <LGeoJson :geojson="geojson" >
         <l-popup>
           <!-- {{ formatProperties(geojson['properties']) }} -->
-            <v-table dense height="300px">
+            <v-table density="compact" height="500px">
                 <template v-slot:default>
-                    <tr v-for="entry in Object.entries(geojson['properties'])" :key="entry[0]">
+                    <tr dense v-for="entry in Object.entries(geojson['properties'])" :key="entry[0]">
                         <td v-if="!isObject(entry[1])">{{entry[0]}}</td>
 
                         <td v-if="isObject(entry[1])" colspan="2">
@@ -54,8 +54,8 @@ export default {
                         </td>
 
                         <td v-if="isObject(entry[1])">
-                            <v-simple-table dense v-if="Object.keys(this.nestedTablesState).includes(entry[0]) && this.nestedTablesState[entry[0]]">
-                                <tr v-for="nestedValue in Object.entries(entry[1])" :key="nestedValue[0]">
+                            <v-simple-table density="compact" v-if="Object.keys(this.nestedTablesState).includes(entry[0]) && this.nestedTablesState[entry[0]]">
+                                <tr dense v-for="nestedValue in Object.entries(entry[1])" :key="nestedValue[0]">
                                     <td>{{nestedValue[0]}}</td>
                                     <td>{{nestedValue[1]}}</td>
                                 </tr>
@@ -71,6 +71,7 @@ export default {
 <style>
 tr:nth-child(even) {
   background-color: #f2f2f2;
+  border-color: #2cc16a;
 }
 .leaflet-popup-content-wrapper {
   display: flex;
@@ -127,11 +128,11 @@ th {
 	}
 
 td, th { 
-	padding: 10px; 
+	padding: 2px; 
 	border: 1px solid #ccc; 
 	text-align: left; 
 	font-size: 18px;
-	}
+}
 
 .labels tr td {
 	background-color: #2cc16a;

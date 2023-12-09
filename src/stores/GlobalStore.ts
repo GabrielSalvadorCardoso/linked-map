@@ -52,7 +52,8 @@ export interface GlobalStoreState {
     mainContentMarginRight: string,
     navigationEntryPointsLoaded: NavigationEntryPoints,
     navigationEndPointsLoaded: NavigationEndPoints,
-    registeredLinks: string[]
+    registeredLinks: string[],
+    idiom: string
 }
 
 export const useGlobalStore = defineStore("GlobalStore", {
@@ -69,7 +70,8 @@ export const useGlobalStore = defineStore("GlobalStore", {
             mainContentMarginRight: '56px',//mainContentMarginRight: 256,
             navigationEntryPointsLoaded: {},
             navigationEndPointsLoaded: {},
-            registeredLinks: []
+            registeredLinks: [],
+            idiom: "pt"
         }
     },
     actions: {
@@ -84,10 +86,6 @@ export const useGlobalStore = defineStore("GlobalStore", {
         setCurrentLayer(layer:any) {
             this.currentLayer = layer
         },
-        // toggleNavigationDrawer() {
-        //     this.isNavigationDrawerOpen = !this.isNavigationDrawerOpen;
-        //     // console.log(this.isNavigationDrawerOpen)
-        // },
         setNavigationDrawerState(state:boolean) {
             this.navigationDrawerRail = state
             if(this.navigationDrawerRail) {
@@ -116,6 +114,10 @@ export const useGlobalStore = defineStore("GlobalStore", {
             if(!this.registeredLinks.includes(link)) {
                 this.registeredLinks.push(link)
             }
+        },
+
+        setIdiom(idiom:string) {
+            this.idiom = idiom
         }
     }
 })
