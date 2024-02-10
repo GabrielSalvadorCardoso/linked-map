@@ -12,12 +12,20 @@ type LocalizationDict = {
     operatorLabel: string,
     insertValueLabel: string,
 
+    // API explorer
+    apiExplorerEntryPointURLsLabel: string,
+
+    // Link Sources
+    linkSourceRegisterNewURL: string, 
+    linkSourceRegisteredURLs: string,
+
     // main map
     addInformationLayer: string,
     selectIdiom: string,
 
     // others
-    close: string
+    close: string,
+    add: string
 }
 
 type Localization = {
@@ -40,11 +48,17 @@ class Internationalization {
             propertyLabel: "Property",
             operatorLabel: "Operator",
             insertValueLabel: "Insert a value (compatible with the selected property)",
+            
+            apiExplorerEntryPointURLsLabel: "Insert a Entry Point URL",
+
+            linkSourceRegisterNewURL: "Register new URL",
+            linkSourceRegisteredURLs: "Registered URLs",
 
             addInformationLayer: "Add Information Layer",
             
             selectIdiom: "Select idiom",
-            close: "Close"
+            close: "Close",
+            add: "Add"
         },
         pt: {
             addInformationLayerDialogTitle: "Informe e explore as URLs",
@@ -59,9 +73,15 @@ class Internationalization {
             operatorLabel: "Operador",
             insertValueLabel: "Informe um valor (compatível com a propriedade selecionada)",
 
+            apiExplorerEntryPointURLsLabel: "Insira uma URL de página de entrada",
+
+            linkSourceRegisterNewURL: "Registrar novo URL",
+            linkSourceRegisteredURLs: "Registered URLs registradas",
+
             addInformationLayer: "Adicionar camada de informação",
             selectIdiom: "Selecionar idioma",
-            close: "Fechar"
+            close: "Fechar",
+            add: "Adicionar"
         }
     }
 

@@ -2,7 +2,8 @@
 import { ref } from 'vue';
 // @ts-ignore
 import EntryPointExpansionPanels from '../utils/EntryPointExpansionPanels.vue'
-
+// @ts-ignore
+import Internationalization from "../../utils/Internationalization";
 const url = ref("")
 
 import { useGlobalStore, type NavigationEntryPoints } from "@/stores/GlobalStore";
@@ -51,8 +52,23 @@ const requestEntryPointMetadata = async () => {
         <p> http://bcim.geoapi </p>
         <p> http://inep.api </p>
         <p> http://anatel.api </p>
-        <v-text-field class="url-input" persistent-placeholder clearable label="Resource URL" v-model="url" variant="outlined"></v-text-field>
-        <v-btn class="execute-btn" v-on:click="($event:any) => requestEntryPointMetadata()" variant="outlined">Add</v-btn>
+
+        <p> http://bcim.geoapi/lim-municipio-a-list/filter/geocodigo/eq/3304557 </p>
+        <p> http://inep.api/taxas-rendimento-escolar-por-municipio-list/filter/codigo_municipio/eq/3304557 </p>
+        <p> http://anatel.api/conectividade-escola-list/filter/codigo_municipio/eq/3304557 </p>
+        <v-text-field   class="url-input"
+                        persistent-placeholder
+                        clearable
+                        :label="Internationalization.getLocaleString('apiExplorerEntryPointURLsLabel', globalStore.idiom)"
+                        v-model="url"
+                        variant="outlined">
+        </v-text-field>
+        
+        <v-btn  class="execute-btn"
+                v-on:click="($event:any) => requestEntryPointMetadata()"
+                variant="outlined">
+                {{ Internationalization.getLocaleString('addInformationLayerDialogTitle', globalStore.idiom) }}
+        </v-btn>
         <entry-point-expansion-panels />
     </div>
 </template>

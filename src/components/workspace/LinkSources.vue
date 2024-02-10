@@ -1,6 +1,7 @@
 <script lang="ts">
 import LinkSourcesTable from '../tables/LinkSourcesTable.vue'
-
+import RegisteredURLsManager from './RegisteredURLsManager.vue'
+import Internationalization from "../../utils/Internationalization";
 import DataDescription from '../../models/DataDescription'
 // @ts-ignore
 import { useGlobalStore } from "@/stores/GlobalStore";
@@ -37,7 +38,8 @@ export type TableItem = {
 export default {
     name: "LinkSources",
     components: {
-        LinkSourcesTable
+        LinkSourcesTable,
+        RegisteredURLsManager
     },
     data():LinkSourcesProps {
         return {
@@ -216,25 +218,25 @@ export default {
             // this.disableCoincidentItems()
             return tableItems
         },
-        async fetchOptionsToURL(url:string) {
-            const JSONLD_ACONTEXT_KEYWORD = "@context";
-            const JSONLD_ATYPE_KEYWORD = "@type";
+        // async fetchOptionsToURL(url:string) {
+        //     const JSONLD_ACONTEXT_KEYWORD = "@context";
+        //     const JSONLD_ATYPE_KEYWORD = "@type";
 
-            const data = await this.fetchMetadata(url)
-            this.urls = this.urls.filter((_url) => _url !== url)
-            this.requestedUrls.push(url)
-            if(!Object.keys(this.contexts).includes(url)) {
-                this.contexts[url] = new DataDescription(url, data[JSONLD_ACONTEXT_KEYWORD], data[JSONLD_ATYPE_KEYWORD])//data
-            }
+        //     const data = await this.fetchMetadata(url)
+        //     this.urls = this.urls.filter((_url) => _url !== url)
+        //     this.requestedUrls.push(url)
+        //     if(!Object.keys(this.contexts).includes(url)) {
+        //         this.contexts[url] = new DataDescription(url, data[JSONLD_ACONTEXT_KEYWORD], data[JSONLD_ATYPE_KEYWORD])//data
+        //     }
 
-            if(Object.keys(this.contexts).length > 1) {
-                this.contextTableItems = this.generateContextTableItems()
-                this.removeJSONLDTermDefinitions()
-                this.removeVocabPrefixDefinitions()
-                this.disableCoincidentItems()
-            }
+        //     if(Object.keys(this.contexts).length > 1) {
+        //         this.contextTableItems = this.generateContextTableItems()
+        //         this.removeJSONLDTermDefinitions()
+        //         this.removeVocabPrefixDefinitions()
+        //         this.disableCoincidentItems()
+        //     }
             
-        },
+        // },
 
         // context view dialog open/close
         openContextViewDialog(url:string) {
@@ -244,6 +246,35 @@ export default {
         closeContextViewDialog() {
             this.contextViewDialogOpen = false
             this.contextOpened = undefined
+        },
+
+        getRegisterNewURLLabel(idiom:string) {
+            return Internationalization.getLocaleString('linkSourceRegisterNewURL', idiom)
+        },
+
+        getRegisteredURLsLabel(idiom:string) {
+            return Internationalization.getLocaleString('linkSourceRegisterNewURL', idiom)
+        },
+
+        async requestContextForURLs(URLSToGetContext:string[]) {
+            for(let url of URLSToGetContext) {
+                const JSONLD_ACONTEXT_KEYWORD = "@context";
+                const JSONLD_ATYPE_KEYWORD = "@type";
+
+                const data = await this.fetchMetadata(url)
+                this.urls = this.urls.filter((_url) => _url !== url)
+                this.requestedUrls.push(url)
+                if(!Object.keys(this.contexts).includes(url)) {
+                    this.contexts[url] = new DataDescription(url, data[JSONLD_ACONTEXT_KEYWORD], data[JSONLD_ATYPE_KEYWORD])//data
+                }
+
+                if(Object.keys(this.contexts).length > 1) {
+                    this.contextTableItems = this.generateContextTableItems()
+                    this.removeJSONLDTermDefinitions()
+                    this.removeVocabPrefixDefinitions()
+                    this.disableCoincidentItems()
+                }
+            }
         }
     }
 }
@@ -251,8 +282,10 @@ export default {
 
 <template>
     <div class="container">
-        <v-card class="form">
-            <v-card-title class="text-subtitle-1">Registered links</v-card-title>
+        <!-- <v-card class="form">
+            <v-card-title class="text-subtitle-1">                
+                {{ getRegisteredURLsLabel(globalStore.idiom) }}
+            </v-card-title>
             <v-card-text>
                 <v-list lines="one" density="compact">
                     <v-list-item density="compact" v-for="link in globalStore.registeredLinks" :key="link">                    
@@ -262,28 +295,21 @@ export default {
             </v-card-text>
 
             <v-card-item>
-                <!-- <div>
-                <div class="text-overline mb-1">
-                    {{ variant }}
-                </div>
-                <div class="text-h6 mb-1">
-                    Headline
-                </div>
-                <div class="text-caption">Greyhound divisely hello coldly fonwderfully</div>
-                </div> -->
                 <v-text-field class="url-input" persistent-placeholder clearable label="Resource URL" v-model="entryPoint.url" variant="outlined"></v-text-field>
-            </v-card-item>
-
-            
+            </v-card-item>            
             
             <v-card-actions>
-                <v-btn class="execute-btn" v-on:click="($event:any) => addCurrentURL()" variant="outlined">Add</v-btn>
+                <v-btn class="execute-btn" v-on:click="($event:any) => addCurrentURL()" variant="outlined">
+                    {{ getRegisterNewURLLabel(globalStore.idiom) }}
+                </v-btn>
             </v-card-actions>
-        </v-card>
+        </v-card> -->
+
+        <RegisteredURLsManager :requestContextForURLs="requestContextForURLs" />
 
         <div class="mt-4"></div>
 
-        <v-card class="form">
+        <!-- <v-card class="form">
             <v-card-title class="text-subtitle-1">Context loaded URLs</v-card-title>
             <v-list lines="one">
                 <v-list-item v-for="url in urls" :key="url">
@@ -293,7 +319,7 @@ export default {
                     </div>
                 </v-list-item>
             </v-list>
-        </v-card>
+        </v-card> -->
 
         <div class="mt-4"></div>
 

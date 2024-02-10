@@ -70,7 +70,11 @@ export const useGlobalStore = defineStore("GlobalStore", {
             mainContentMarginRight: '56px',//mainContentMarginRight: 256,
             navigationEntryPointsLoaded: {},
             navigationEndPointsLoaded: {},
-            registeredLinks: [],
+            registeredLinks: [
+                "http://bcim.geoapi/lim-municipio-a-list/filter/geocodigo/eq/3304557",
+                "http://inep.api/taxas-rendimento-escolar-por-municipio-list/filter/codigo_municipio/eq/3304557",
+                "http://anatel.api/conectividade-escola-list/filter/codigo_municipio/eq/3304557"
+            ],
             idiom: "pt"
         }
     },
