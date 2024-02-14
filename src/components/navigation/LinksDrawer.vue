@@ -96,11 +96,21 @@ const closeMergeDataDialog = () => {
 const setLinksDrawerRail = (event:any, rail:boolean) => {
     globalStore.setLinksDrawerRail(rail)
 }
+
+const getFormattedSourcesLink = (sourcesLink:string) => {
+    let individualLinks = sourcesLink.split("+")
+    let formattedLinks = []
+    for(let i=0; i<individualLinks.length; i++) {
+        formattedLinks.push(individualLinks[i].trim())
+        // formattedLinks.push()
+    }
+    return formattedLinks.join("\n")
+}
 </script>
 <template>
     <v-card>
         <v-layout>
-            <v-navigation-drawer location="right" v-bind="globalStore.isLinksDrawerOpen" :rail="globalStore.linksDrawerRail" permanent @click="($event:any, rail:boolean) => setLinksDrawerRail($event, false)">
+            <v-navigation-drawer location="right" :v-bind="globalStore.isLinksDrawerOpen" :rail="globalStore.linksDrawerRail" permanent @click="($event:any, rail:boolean) => setLinksDrawerRail($event, false)">
                 <v-list-item  prepend-avatar="https://json-ld.org/images/json-ld-data-24.png" :title="getActiveTabName()" nav>
                     <template v-slot:append>
                         <v-btn variant="text" icon="mdi-chevron-right" @click.stop="($event:any, rail:boolean) => setLinksDrawerRail($event, !rail)"></v-btn>
@@ -109,21 +119,33 @@ const setLinksDrawerRail = (event:any, rail:boolean) => {
                 <v-divider></v-divider>
   
                 <v-list density="compact">
-                    <!-- <v-list-item v-for="sourcesLink in Object.keys(globalStore.sourcesLinks)" :key="sourcesLink">
-                        <div class="item-content">
-                            <v-list-item-title class="item-title">{{ sourcesLink }}</v-list-item-title>
-                            <v-btn icon="mdi-map-plus" @click="($event:any) => mergeData(globalStore.sourcesLinks[sourcesLink])"></v-btn>
-                        </div>
-                    </v-list-item> -->
-                    <v-list-item    prepend-icon="mdi-map-plus"
-                                    :title="sourcesLink"
-                                    class="sourceLinkItem"
-                                    @click="($event:any) => mergeData(globalStore.sourcesLinks[sourcesLink])"
+                    <v-list-item    class="sourceLinkItem"
                                     v-for="sourcesLink in Object.keys(globalStore.sourcesLinks)" :key="sourcesLink">
-                        
-                            <!-- <v-list-item-title class="item-title">{{ sourcesLink }}</v-list-item-title> -->
-                            <!-- <v-btn icon="mdi-map-plus" @click="($event:any) => mergeData(globalStore.sourcesLinks[sourcesLink])"></v-btn> -->
-                        
+                                    
+                                    <v-tooltip activator="parent" location="start">
+                                        <pre>{{ getFormattedSourcesLink(sourcesLink) }}</pre>
+                                    </v-tooltip>
+                                    
+                                    <v-menu transition="scale-transition">
+                                        
+                                        <!-- eslint-disable-next-line vue/no-unused-vars -->
+                                        <template v-slot:activator="{ props }">
+                                            <v-btn v-bind="props">
+                                                {{ sourcesLink }}
+                                            </v-btn>
+                                        </template>
+                                        
+                                        <v-list>
+                                            <v-list-item    title="Render Layer"
+                                                            prepend-icon="mdi-map-plus"
+                                                            @click="($event:any) => mergeData(globalStore.sourcesLinks[sourcesLink])">
+                                            </v-list-item>
+                                            <v-list-item    title="Get Info"
+                                                            prepend-icon="mdi-information"
+                                                            @click="($event:any) => {}">
+                                            </v-list-item>
+                                        </v-list>
+                                    </v-menu>
                     </v-list-item>
                 </v-list>
             </v-navigation-drawer>

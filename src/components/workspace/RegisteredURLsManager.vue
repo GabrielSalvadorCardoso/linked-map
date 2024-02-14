@@ -7,7 +7,7 @@ export interface DataDescriptionMap {
     [key:string]: DataDescription
 }
 
-type RegisteredURLsManager = {
+type RegisteredURLsManagerProps = {
     entryPoint: any,
     urls: string[],
     requestedUrls: string[],
@@ -20,7 +20,7 @@ export default {
     name: 'RegisteredURLsManager',
     components: {},
     props: ['requestContextForURLs'],
-    data():RegisteredURLsManager {
+    data():RegisteredURLsManagerProps {
         return {
             entryPoint: {
                 url: undefined,//"http://bcim.geoapi",
