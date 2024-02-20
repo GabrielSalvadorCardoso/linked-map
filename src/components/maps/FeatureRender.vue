@@ -3,7 +3,7 @@ import { LGeoJson, LPopup } from "@vue-leaflet/vue-leaflet";
 export default {
     components: {
         LGeoJson,
-        LPopup
+        // LPopup
     },
     props: {
         geojson: Object,
@@ -38,8 +38,7 @@ export default {
 
 <template>
     <LGeoJson :geojson="geojson" >
-        <l-popup>
-          <!-- {{ formatProperties(geojson['properties']) }} -->
+        <!-- <l-popup>
             <v-table density="compact" height="500px">
                 <template v-slot:default>
                     <tr dense v-for="entry in Object.entries(geojson['properties'])" :key="entry[0]">
@@ -64,7 +63,7 @@ export default {
                     </tr>
                 </template>
             </v-table>
-        </l-popup>
+        </l-popup> -->
     </LGeoJson>
 </template>
 

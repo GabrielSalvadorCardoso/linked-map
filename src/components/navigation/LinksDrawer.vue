@@ -3,6 +3,8 @@ import { useGlobalStore } from "@/stores/GlobalStore";
 import { type LinkinItem } from "@/stores/GlobalStore";
 // @ts-ignore
 import MergeDataDialog from "../maps/MergeDataDialog.vue";
+import FeatureInfoDialog from "../maps/FeatureInfoDialog.vue";
+
 import { ref } from "vue";
 
 const CONTENT_TYPE_GEOJSON = "application/geo+json"
@@ -11,6 +13,8 @@ const JSONLD_AID_KEYWORD = "@id"
 
 const globalStore = useGlobalStore()
 const isMergeDataDialogOpen = ref(false)
+const isFeatureInfoDialogOpen = ref(false)
+
 const getActiveTabName = () => {
     return `Linked Sources`// | ${this.activeTab}
 }
@@ -93,6 +97,12 @@ const openMergeDataDialog = () => {
 const closeMergeDataDialog = () => {
     isMergeDataDialogOpen.value = false
 }
+const openFeatureInfoDialog = () => {
+    isFeatureInfoDialogOpen.value = true
+}
+const closeFeatureInfoDialog = () => {
+    isFeatureInfoDialogOpen.value = false
+}
 const setLinksDrawerRail = (event:any, rail:boolean) => {
     globalStore.setLinksDrawerRail(rail)
 }
@@ -142,7 +152,8 @@ const getFormattedSourcesLink = (sourcesLink:string) => {
                                             </v-list-item>
                                             <v-list-item    title="Get Info"
                                                             prepend-icon="mdi-information"
-                                                            @click="($event:any) => {}">
+                                                            :disabled="globalStore.currentLayer === null"
+                                                            @click="($event:any) => openFeatureInfoDialog()">
                                             </v-list-item>
                                         </v-list>
                                     </v-menu>
@@ -151,6 +162,7 @@ const getFormattedSourcesLink = (sourcesLink:string) => {
             </v-navigation-drawer>
         </v-layout>
         <MergeDataDialog   :isMergeDataDialogOpen="isMergeDataDialogOpen" />
+        <FeatureInfoDialog :isFeatureInfoDialogOpen="isFeatureInfoDialogOpen" @closeFeatureInfoDialog="closeFeatureInfoDialog" />
     </v-card>
 </template>
 <style>

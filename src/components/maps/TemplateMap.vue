@@ -31,9 +31,6 @@ const zoom = ref(4)
     </div>
 </template>
 <style>
-/* .teste {
-    text-align: center;
-} */
 .mapContainer {
     height: 95vh;
     /* width: 100%; */
