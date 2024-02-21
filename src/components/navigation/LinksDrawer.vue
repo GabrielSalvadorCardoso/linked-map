@@ -18,7 +18,7 @@ const isFeatureInfoDialogOpen = ref(false)
 const getActiveTabName = () => {
     return `Linked Sources`// | ${this.activeTab}
 }
-const mergeWithFeatures = async (features: any[], featuresLinks:LinkinItem, featuresMetadata:any, dataset: any[], datasetLinks:LinkinItem[], metadataset: any[]) => {
+const mergeWithFeaturesToPopUp = async (features: any[], featuresLinks:LinkinItem, featuresMetadata:any, dataset: any[], datasetLinks:LinkinItem[], metadataset: any[]) => {
     let _features = []
     for(let i=0; i<features.length; i++) {
         let matchs = []
@@ -35,6 +35,36 @@ const mergeWithFeatures = async (features: any[], featuresLinks:LinkinItem, feat
             matchs.forEach((m:any) => {
                 matchsObject = {...matchsObject, ...m}
             })
+        }
+        
+        let properties = {...features[i]["properties"], ...matchsObject}
+        features[i]["properties"] = properties
+        _features.push(features[i])
+    }
+    return _features
+}
+
+const mergeWithFeatures = async (features: any[], featuresLinks:LinkinItem, featuresMetadata:any, dataset: any[], datasetLinks:LinkinItem[], metadataset: any[]) => {
+    let _features = []
+    for(let i=0; i<features.length; i++) {
+        let matchs = []
+        let matchsObject:any = {}
+        for(let k=0; k<dataset.length; k++) {
+            let idAttribute = (Object.entries(metadataset[k][JSONLD_ACONTEXT_KEYWORD]).find((keyVal) => keyVal[1] === JSONLD_AID_KEYWORD) as unknown as any)[0]
+            matchs = dataset[k].filter((_obj:any) => _obj[datasetLinks[k].term] === features[i]["properties"][featuresLinks.term])
+
+            // let propertieMatchs:any = {}
+            matchsObject[datasetLinks[k].source] = matchs
+
+            // matchs = matchs.map((_match:any) => {
+            //     let attrVal = _match[idAttribute]
+            //     let newMatch:any = {}
+            //     newMatch[`${datasetLinks[k].source}/${attrVal}`] = _match
+            //     return newMatch
+            // })
+            // matchs.forEach((m:any) => {
+            //     matchsObject = {...matchsObject, ...m}
+            // })
         }
         
         let properties = {...features[i]["properties"], ...matchsObject}
