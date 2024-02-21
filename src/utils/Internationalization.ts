@@ -18,6 +18,7 @@ type LocalizationDict = {
     // Link Sources
     linkSourceRegisterNewURL: string, 
     linkSourceRegisteredURLs: string,
+    linkResourcesLabel: string,
 
     // main map
     addInformationLayer: string,
@@ -26,6 +27,11 @@ type LocalizationDict = {
     // others
     close: string,
     add: string
+    semantic: string,
+    term: string,
+    source: string,
+    type: string,
+    linkBy: string
 }
 
 type Localization = {
@@ -53,12 +59,18 @@ class Internationalization {
 
             linkSourceRegisterNewURL: "Register new URL",
             linkSourceRegisteredURLs: "Registered URLs",
+            linkResourcesLabel: "Link Resources",
 
             addInformationLayer: "Add Information Layer",
             
             selectIdiom: "Select idiom",
             close: "Close",
-            add: "Add"
+            add: "Add",
+            semantic: "Semantic",
+            term: "Term",
+            source: "Source",
+            type: "Type",
+            linkBy: "Link by"
         },
         pt: {
             addInformationLayerDialogTitle: "Informe e explore as URLs",
@@ -77,11 +89,17 @@ class Internationalization {
 
             linkSourceRegisterNewURL: "Registrar novo URL",
             linkSourceRegisteredURLs: "Registered URLs registradas",
+            linkResourcesLabel: "Ligar Recursos",
 
             addInformationLayer: "Adicionar camada de informação",
             selectIdiom: "Selecionar idioma",
             close: "Fechar",
-            add: "Adicionar"
+            add: "Adicionar",
+            semantic: "Semantica",
+            term: "Termo",
+            source: "Fonte",
+            type: "Tipo",
+            linkBy: "Ligar por"
         }
     }
 

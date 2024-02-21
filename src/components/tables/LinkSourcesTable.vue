@@ -4,6 +4,7 @@ import { type DataDescriptionMap, type TableItem } from '../workspace/LinkSource
 import LinkSourcesConfirmationTable from './LinkSourcesConfirmationTable.vue'
 import type { LinkinItem, LinkinMap } from '@/stores/GlobalStore';
 import { useGlobalStore } from "@/stores/GlobalStore";
+import Internationalization from '@/utils/Internationalization';
 const globalStore = useGlobalStore()
 const props = defineProps<{
     contexts: DataDescriptionMap,
@@ -79,22 +80,22 @@ const setLinkSourcesSelection = (event:any, item:TableItem) => {
 </script>
 <template>
     <div class="container">
-        <v-table v-if="Object.keys(contexts).length > 1" class="link-sources-table" density="compact">
+        <v-table v-if="Object.keys(contexts).length > 1" density="compact">
             <thead>
                 <tr>
-                    <th class="text-left"> </th>                    
-                    <th class="text-left">Semantic (@id)</th>                    
-                    <th class="text-left">Term</th>
-                    <th class="text-left">Source</th>
-                    <th class="text-left">Type (@type)</th>
+                    <td class="text-center">{{ Internationalization.getLocaleString("linkBy", globalStore.idiom) }}</td>
+                    <td class="text-center">{{ Internationalization.getLocaleString("semantic", globalStore.idiom) }} (@id)</td>
+                    <td class="text-center">{{ Internationalization.getLocaleString("term", globalStore.idiom) }}</td>
+                    <td class="text-center">{{ Internationalization.getLocaleString("source", globalStore.idiom) }}</td>
+                    <td class="text-center">{{ Internationalization.getLocaleString("type", globalStore.idiom) }} (@type)</td>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(item, index) in contextTableItems" :key="`${item.semantic}-${item.source}`">
-                    <td v-if="isUniqueSemanticItem(item)">
+                    <td class="text-center" v-if="isUniqueSemanticItem(item)">
                         <input type="checkbox" disabled/>
                     </td>
-                    <td v-if="isFirstInDuplicationSemanticSet(item, index)" :rowspan="item.matchsWith.length+1">
+                    <td class="text-center" v-if="isFirstInDuplicationSemanticSet(item, index)" :rowspan="item.matchsWith.length+1">
                         <input type="checkbox" v-on:click="($event) => setLinkSourcesSelection($event, item)" />
                     </td>
 
@@ -112,16 +113,25 @@ const setLinkSourcesSelection = (event:any, item:TableItem) => {
                                             :selectedTableItems="selectedTableItems"
                                             :contextTableItems="contextTableItems" />
         </v-table>
-        <v-btn class="link-sources-btn" v-if="Object.keys(contexts).length > 1" v-on:click="($event:any) => openLinkSourceDialog()" variant="outlined">
-            Link Sources
-        </v-btn>
+        <div class="linkResourcesButtonContainer">
+            <v-btn v-if="Object.keys(contexts).length > 1" v-on:click="($event:any) => openLinkSourceDialog()" variant="outlined">
+                {{ Internationalization.getLocaleString("linkResourcesLabel", globalStore.idiom) }}
+            </v-btn>
+        </div>
     </div>
 </template>
 <style>
-/* .container {
-    margin: 10px 255px;
+thead td {
+    font-weight: bold;
+}
+
+.linkResourcesButtonContainer {
+    margin: 0 auto 10px auto;
+}
+.container {
+    /* margin: 10px 255px; */
     display: flex;
     flex-direction: column;
     justify-content: center;
-} */
+}
 </style>
